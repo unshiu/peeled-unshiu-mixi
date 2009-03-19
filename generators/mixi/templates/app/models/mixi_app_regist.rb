@@ -12,6 +12,7 @@
 #
 
 class MixiAppRegist < ActiveRecord::Base
+  acts_as_paranoid
   
   belongs_to :mixi_user
   belongs_to :mixi_app

@@ -31,4 +31,11 @@ class MixiApp < ActiveRecord::Base
       end
     end
   end
+
+  # アプリを削除したユーザ数を返す
+  def count_delete_mixi_users
+    MixiAppRegist.count_with_deleted(:include => [:mixi_app], 
+                                     :conditions => ["mixi_app_regists.mixi_app_id = ? and mixi_app_regists.deleted_at is not null", self.id])
+  end
+  
 end

@@ -29,8 +29,21 @@ module MixiAppTestModule
     regist.mixi_user_id = 2
     regist.save
     
+    assert_equal before_count + 1, mixi_app.mixi_users.count
+  end
+  
+  define_method('test: 特定のアプリをインストール後削除しているユーザ数をかえす') do 
     mixi_app = MixiApp.find(1)
-    assert_equal before_count + 1, mixi_app.mixi_users.size
+    
+    before_count = mixi_app.count_delete_mixi_users
+    
+    regist = MixiAppRegist.new
+    regist.mixi_app_id = 1
+    regist.mixi_user_id = 2
+    regist.deleted_at = Time.now
+    regist.save # 解除ユーザを増やす
+    
+    assert_equal before_count + 1, mixi_app.count_delete_mixi_users
   end
   
 end
