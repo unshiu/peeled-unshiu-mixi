@@ -34,8 +34,19 @@ class MixiApp < ActiveRecord::Base
 
   # アプリを削除したユーザ数を返す
   def count_delete_mixi_users
-    MixiAppRegist.count_with_deleted(:include => [:mixi_app], 
-                                     :conditions => ["mixi_app_regists.mixi_app_id = ? and mixi_app_regists.deleted_at is not null", self.id])
+    MixiAppRegist.count_with_deleted(:conditions => ["mixi_app_regists.mixi_app_id = ? and mixi_app_regists.deleted_at is not null", self.id])
   end
   
+  #select avg(avg_mixi_user_id) from ( SELECT count(`mixi_app_invites`.mixi_user_id) AS avg_mixi_user_id  FROM `mixi_app_invites` WHERE (mixi_app_invites.mixi_app_id = 1 )
+  # AND (mixi_app_invites.deleted_at IS NULL OR mixi_app_invites.deleted_at > '2009-03-18 14:48:52') GROUP BY mixi_user_id ) as t
+  
+  def avg_invite_per_user
+    results = MixiApp.find_by_sql(["select avg(count_mixi_user) as avg" +
+                                   " from ( select count(mixi_app_invites.mixi_user_id) as count_mixi_user from mixi_app_invites " +
+                                   "          where mixi_app_invites.mixi_app_id = ? and mixi_app_invites.deleted_at IS NULL OR mixi_app_invites.deleted_at > ? " + 
+                                   "          group by mixi_user_id ) as t1 ", self.id, Time.now])
+    avg = 0
+    results.each { |result| avg = result.avg }
+    avg.to_f
+  end
 end

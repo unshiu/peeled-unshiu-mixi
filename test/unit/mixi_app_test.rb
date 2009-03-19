@@ -8,6 +8,7 @@ module MixiAppTestModule
         fixtures :mixi_apps
         fixtures :mixi_users
         fixtures :mixi_app_regists
+        fixtures :mixi_app_invites
       end
     end
   end
@@ -46,4 +47,22 @@ module MixiAppTestModule
     assert_equal before_count + 1, mixi_app.count_delete_mixi_users
   end
   
+  define_method('test: 1ユーザの平均配布数を取得する') do 
+    mixi_app = MixiApp.find(1)
+    
+    before_avg = mixi_app.avg_invite_per_user
+    
+    invite = MixiAppInvite.new({:mixi_app_id => 1, :mixi_user_id => 2, :invitee_user_id => 1})
+    invite.save 
+    
+    invite = MixiAppInvite.new({:mixi_app_id => 1, :mixi_user_id => 2, :invitee_user_id => 3})
+    invite.save 
+    
+    assert_equal mixi_app.avg_invite_per_user, 2.0
+    
+    invite = MixiAppInvite.new({:mixi_app_id => 1, :mixi_user_id => 1, :invitee_user_id => 4})
+    invite.save 
+    
+    assert_equal mixi_app.avg_invite_per_user, 1.5
+  end
 end
