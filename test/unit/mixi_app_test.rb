@@ -65,4 +65,5 @@ module MixiAppTestModule
     
     assert_equal mixi_app.avg_invite_per_user, 1.5
   end
+  
 end

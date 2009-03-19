@@ -10,7 +10,6 @@
 #  created_at   :datetime
 #  updated_at   :datetime
 #
-
 a:
   id: 1
   mixi_app_id: 1
