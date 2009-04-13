@@ -1,0 +1,10 @@
+common: &common
+  
+development:
+  <<: *common
+
+test:
+  <<: *common
+
+production:
+  <<: *common

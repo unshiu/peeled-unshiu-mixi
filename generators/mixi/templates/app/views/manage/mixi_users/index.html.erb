@@ -1,0 +1,24 @@
+<%- @pan1="管理者設定" -%><%- @pan2='mixiアプリ' -%><%- @pan3="ユーザ" -%>
+
+<% content_for(:header_title) do %>
+	mixiアプリユーザ
+<% end %>
+
+	
+<table class="lineColorL" style="width:609px;">
+	<tr>
+		<th width="20%">ユーザ数</th>
+		<td><%=h @mixi_user_count %></td>
+	</tr>
+	<tr>
+		<th width="20%">総退会者数</th>
+		<td><%=h @mixi_delete_user_count %></td>
+	</tr>
+	<tr>
+		<th width="20%">平均配布数</th>
+		<td><%=h @mixi_avg_invite_per_user %></td>
+	</tr>
+</table>
+<br/>
+
+<h3>月間アクティブ利用ユーザ遷移</h3>
