@@ -12,6 +12,22 @@ module MixiUserTestModule
     end
   end
   
+  define_method('test: mixi友達関連を取得する') do 
+    mixi_user = MixiUser.find(1)
+    assert_not_nil(mixi_user)
+    assert_not_nil(mixi_user.mixi_friends)
+    
+    mixi_user = MixiUser.create_or_update({"mixi_id" => "test_mixi_id", "nickname" => "nickname", 
+                                           "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})
+                                           
+    assert_difference("MixiUser.find(1).mixi_friends.size", 1) do
+      mixi_friend = MixiFriend.new
+      mixi_friend.mixi_user_id = 1
+      mixi_friend.friend_id = mixi_user.id
+      mixi_friend.save
+    end
+  end
+  
   define_method('test: mixiユーザを作成する') do 
     mixi_user = MixiUser.create_or_update({"mixi_id" => "test_mixi_id", "nickname" => "nickname", 
                                            "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})

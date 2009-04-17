@@ -27,17 +27,18 @@ module MixiGadgetControllerModule
         owner.save
       end
       
-      owner.mixi_friends = []
       friends_data.each do |friend_data|
         user = MixiUser.create_or_update(friend_data)
-        owner.mixi_friends << user
+        owner.mixi_friends << user unless owner.mixi_friends.member?(user)
       end
       owner.save
+      
+      MixiLatestLogin.update_latest_login(owner.id)
       
       session[:owner] = owner
       session[:valid] = nil
       
-      redirect_to :action => 'top', "_baton_session_id" => request.session_options[:id]
+      redirect_to :action => 'top', request.session_options[:key] => request.session_options[:id]
     else
       render :action => 'timeout'
     end

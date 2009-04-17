@@ -26,7 +26,7 @@ class MixiGenerator < Rails::Generator::NamedBase
       }
       
       # text files
-      Dir::glob(prefix + '**/*.{yml,erb,jpg,txt,mo,po,pot,css,gif,csv,rb,rjs}').each { |f|
+      Dir::glob(prefix + '**/*.{yml,erb,jpg,txt,mo,po,pot,css,gif,csv,rb,rjs,js}').each { |f|
         filename = f.sub(prefix, '')
         m.file(
           filename, # from('vendor/plugins/foo/generators/foo/templates/' 相対パス)

@@ -8,5 +8,4 @@ module ManageMixiUsersControllerModule
     @mixi_avg_invite_per_user = MixiUser.avg_invite_per_user
   end
   
-  
 end

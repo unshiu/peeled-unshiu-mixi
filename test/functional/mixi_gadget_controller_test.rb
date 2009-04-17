@@ -21,7 +21,34 @@ module MixiGadgetControllerTestModule
     assert_not_nil(session[:valid])
   end
   
-  define_method('test: コンテナから取得したユーザ情報と友達情報を登録する') do 
+  define_method('test: コンテナから取得したユーザ情報と友達情報を登録する-初期登録の場合') do 
+    session[:valid] = true
+    
+    owner = { "mixi_id" => 500, "nickname" => "jane", 
+                              "profile_url" => "http://unshiu.drecom.jp/profile/500",
+                              "thumbnail_url" => "http://unshiu.drecom.jp/profile/500/profile.gif" }.to_json
+    friends = [ { "mixi_id" => 501, "nickname" => "doe", 
+                                  "profile_url" => "http://unshiu.drecom.jp/profile/501",
+                                  "thumbnail_url" => "http://unshiu.drecom.jp/profile/501/profile.gif" } ].to_json
+    
+    post :register, :owner => owner, :friends => friends
+    assert_response :redirect
+    assert_redirected_to :action => 'top'
+    
+    mixi_user = MixiUser.find_by_mixi_id(500)
+    assert_equal(mixi_user.nickname, "jane")
+    assert_equal(mixi_user.profile_url, "http://unshiu.drecom.jp/profile/500")
+    assert_equal(mixi_user.thumbnail_url, "http://unshiu.drecom.jp/profile/500/profile.gif")
+    assert_not_nil(mixi_user.joined_at) # アプリ利用者なのでアプリを利用している
+    
+    mixi_user = MixiUser.find_by_mixi_id(501)
+    assert_equal(mixi_user.nickname, "doe")
+    assert_equal(mixi_user.profile_url, "http://unshiu.drecom.jp/profile/501")
+    assert_equal(mixi_user.thumbnail_url, "http://unshiu.drecom.jp/profile/501/profile.gif")
+    
+  end
+  
+  define_method('test: コンテナから取得したユーザ情報と友達情報を登録する-既存データがある場合') do 
     session[:valid] = true
     
     owner = { "mixi_id" => 1, "nickname" => "jane", 

@@ -25,11 +25,11 @@ module MixiApplicationHelperModule
   end
 
   def update_function(options)
-    request_function(options, 'requestContainer')
+    request_function(options, '$.drecom_mixi_gadget.requestContainer')
   end
 
   def script_function(options)
-    request_function(options, 'requestScript')
+    request_function(options, '$.drecom_mixi_gadget.requestScript')
   end
 
 protected

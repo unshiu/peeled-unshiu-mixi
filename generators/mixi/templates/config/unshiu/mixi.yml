@@ -1,5 +1,10 @@
 common: &common
   
+  author: gaooh
+  author_email: asami@drecom.co.jp
+  
+  active_day: 3 # active_day日以降にログイン履歴があるユーザをアクティブとする
+  
 development:
   <<: *common
 
