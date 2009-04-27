@@ -1,8 +1,9 @@
 class MixiGadgetController < MixiApplicationController
   include MixiGadgetControllerModule
   
+  # gadgetが表示されて最初に閲覧するページ。アプリ開発者がoverwriteして利用する
   def top
-    @batons = Baton.find(:all, :conditions => ["create_mixi_user_id = ?", session[:owner].id])
+    # application overwrite
   end
 
 end

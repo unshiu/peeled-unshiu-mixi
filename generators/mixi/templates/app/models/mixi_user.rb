@@ -19,6 +19,4 @@
 
 class MixiUser < ActiveRecord::Base
   include MixiUserModule
-  
-  has_many :baton_answers  
 end
