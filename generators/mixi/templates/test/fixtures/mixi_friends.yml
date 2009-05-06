@@ -1,5 +1,4 @@
 # == Schema Information
-# Schema version: 20090321192645
 #
 # Table name: mixi_friends
 #
