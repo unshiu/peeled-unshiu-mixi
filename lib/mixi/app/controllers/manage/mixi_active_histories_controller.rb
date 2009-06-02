@@ -24,8 +24,8 @@ module ManageMixiActiveHistoriesControllerModule
   end
   
   def search
-    active_mixi_user_search_form = Forms::MixiActiveUserSearchForm.new(params[:mixi_user_active_seach])
-    unless active_mixi_user_search_form.valid?
+    @mixi_user_active_seach = Forms::MixiActiveUserSearchForm.new(params[:mixi_user_active_seach])
+    unless @mixi_user_active_seach.valid?
       @mixi_active_histories = MixiActiveHistory.find(:all, :page => {:size => AppResources[:mng][:standard_list_size], :current => params[:page]})
       @years = []
       (MixiActiveHistory.oldest_year..MixiActiveHistory.newest_year).each { |year| @years << year }
@@ -35,8 +35,8 @@ module ManageMixiActiveHistoriesControllerModule
     
     @active_users = Array.new
 
-    if active_mixi_user_search_form.day? # 日別表示
-      histories = MixiActiveHistory.period(active_mixi_user_search_form.start_date, active_mixi_user_search_form.end_date)
+    if @mixi_user_active_seach.day? # 日別表示
+      histories = MixiActiveHistory.period(@mixi_user_active_seach.start_at, @mixi_user_active_seach.end_at)
       histories.each do |history|
         active_user = Hash.new
         active_user[:date] = history.history_day.strftime('%Y/%m/%d')
@@ -44,9 +44,9 @@ module ManageMixiActiveHistoriesControllerModule
         @active_users << active_user
       end
 
-    elsif active_mixi_user_search_form.month? # 月別表示
+    elsif @mixi_user_active_seach.month? # 月別表示
 
-      histories = MixiActiveHistory.summary_period_by_year_month(active_mixi_user_search_form.start_date, active_mixi_user_search_form.end_date)
+      histories = MixiActiveHistory.summary_period_by_year_month(@mixi_user_active_seach.start_at, @mixi_user_active_seach.end_at)
       histories.each do |history|
         active_user = Hash.new
         active_user[:date] = history.history_day.strftime('%Y/%m')

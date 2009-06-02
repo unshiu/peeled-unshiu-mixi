@@ -8,7 +8,7 @@ module MixiLatestLoginModule
       base.extend(ClassMethods)
       base.class_eval do
         if AppResources[:init][:tokyotyrant_on]
-          set_server AppResources[:init][:tokyotyrant_master_server_ip], AppResources[:init][:tokyotyrant_master_server_port], :write
+          server_config Rails.env, "config/miyazakiresistance.yml"
           set_timeout AppResources[:init][:tokyotyrant_timeout]
           set_column :mixi_user_id, :integer
           set_column :latest_login, :datetime

@@ -90,8 +90,8 @@ module Manage::MixiActiveHistoriesControllerTestModule
   
     post :search, :mixi_user_active_seach => { 
                                :type => { "day" => true}, 
-                               "start_at(1i)" => 2008, "start_at(2i)" => 1, "start_at(3i)" => 21 ,
-                               "end_at(1i)"   => 2009,   "end_at(2i)" => 11,  "end_at(3i)" => 11 }
+                               "start_at(1i)" => 2008, "start_at(2i)" => 2, "start_at(3i)" => 12,
+                               "end_at(1i)"   => 2010, "end_at(2i)"   => 10, "end_at(3i)"   => 10}
     assert_response :success
     assert_template 'search'
   end
@@ -101,8 +101,8 @@ module Manage::MixiActiveHistoriesControllerTestModule
   
     post :search, :mixi_user_active_seach => { 
                               :type     => { "month" => true}, 
-                              "start_at(1i)" => 2008, "start_at(2i)" => 2 ,
-                              "end_at(1i)"   => 2010, "end_at(2i)"   => 10 } 
+                              "start_at(1i)" => 2008, "start_at(2i)" => 2, "start_at(3i)" => 12,
+                               "end_at(1i)"   => 2010, "end_at(2i)"   => 10, "end_at(3i)"   => 10}
     assert_response :success
     assert_template 'search'
   end
