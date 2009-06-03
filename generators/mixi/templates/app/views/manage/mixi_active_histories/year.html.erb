@@ -1,0 +1,35 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2="アクティブユーザ年度別履歴" -%>
+
+<% content_for(:header_title) do %>
+	アクティブユーザ年度別履歴
+<% end %>
+
+<%= render :partial => 'search_form' %>
+<br/>
+<br/>
+<h3>アクティブ利用ユーザ年度別履歴</h3>
+
+<% if @mixi_active_histories.size.zero? %>
+	履歴がありません。
+<% else %>
+	
+	<p>
+		年度別&nbsp;|&nbsp;
+		<%= link_to "月別",  month_manage_mixi_active_histories_path %>&nbsp;|&nbsp;
+		<%= link_to "日別",  manage_mixi_active_histories_path %>
+	</p>
+	
+	<table class="lineColorT" style="width:609px;">
+		<tr>
+			<th>日付</th>
+			<th>アクティブユーザ数</th>
+		</tr>
+	  <% @mixi_active_histories.each do |mixi_active_histories| %>
+		<tr>
+			<td><%=h mixi_active_histories.history_day.strftime("%Y-%m") %></td>
+		    <td><%=h mixi_active_histories.user_count %></td>
+		</tr>
+	  <% end %>
+	</table>
+	
+<% end %>

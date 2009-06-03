@@ -1,0 +1,27 @@
+# == Schema Information
+#
+# Table name: mixi_users
+#
+#  id            :integer(4)      not null, primary key
+#  mixi_id       :string(255)     not null
+#  base_user_id  :integer(4)      not null
+#  nickname      :string(255)
+#  profile_url   :string(255)
+#  thumbnail_url :string(255)
+#  deleted_at    :datetime
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
+a:
+  id: 1
+  mixi_id: 1
+  base_user_id: 1
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+b:
+  id: 2
+  mixi_id: 2
+  base_user_id: 2
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>

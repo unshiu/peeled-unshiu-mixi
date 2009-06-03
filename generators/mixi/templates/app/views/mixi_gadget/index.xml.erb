@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+    <ModulePrefs
+       		title="<%= AppResources[:init][:service_name]%>"
+            title_url="http://<%= AppResources[:init][:application_domain] %>/gadget.xml"
+            author="<%= AppResources[:mixi][:author] %>"
+            author_email="<%= AppResources[:mixi][:author_email] %>"
+            description="">
+
+        <Require feature="opensocial-0.8" />
+        <Require feature="views" />
+        <Require feature="dynamic-height" />
+    </ModulePrefs>
+
+	<Content type="html" >
+		<%= render :partial => 'canvas' %>
+	</Content>
+
+    <Content type="html" view="canvas">
+    	<%= render :partial => 'canvas' %>
+    </Content>
+    <Content type="html" view="profile">
+		<%= render :partial => 'profile' %>
+	</Content>
+    <Content type="html" view="preview">
+		<%= render :partial => 'preview' %>
+	</Content>
+    <Content type="html" view="home">
+    	<%= render :partial => 'home' %>
+    </Content>
+</Module>

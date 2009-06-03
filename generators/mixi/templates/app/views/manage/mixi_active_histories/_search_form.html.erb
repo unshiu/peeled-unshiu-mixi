@@ -1,0 +1,30 @@
+<h3>履歴検索</h3>
+
+<% form_for :mixi_user_active_seach, :url => { :action => :search } do |f| %>
+	<table class="lineColorL" style="width:609px;">
+		<tr>
+			<th>開始日</th>
+			<td>
+				<%= f.date_select 'start_at', :use_month_numbers => true, :default => Time.now - 7.days %>
+				<%= adjusted_datetime 'mixi_user_active_seach', 'start_at' %>
+			</td>
+		</tr>
+		<tr>
+			<th>終了日</th>
+			<td>
+				<%= f.date_select 'end_at', :use_month_numbers => true, :default => Time.now %>
+				<%= adjusted_datetime 'mixi_user_active_seach', 'end_at' %>
+			</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>
+				<%= f.radio_button "type", "day", {"checked" => "checked"} %>日別
+				<%= f.radio_button "type", "month" %>月別
+			</td>
+		</tr>
+	</table>
+	<div class="bot_btn">
+		<%= mng_submit_tag '検索' %>
+	</div>
+<% end %>

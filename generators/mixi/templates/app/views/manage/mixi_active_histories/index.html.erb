@@ -1,0 +1,46 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2="アクティブ利用ユーザ履歴" -%>
+
+<% content_for(:header_title) do %>
+	アクティブ利用ユーザ履歴
+<% end %>
+
+<%= render :partial => 'search_form' %>
+
+<br/>
+<br/>
+<h3>アクティブ利用ユーザ履歴</h3>
+
+<% if @mixi_active_histories.size.zero? %>
+	履歴がありません。
+<% else %>
+	<%= paginate_header(@mixi_active_histories) %>
+	
+	<p>
+		<%= link_to "年度別", year_manage_mixi_active_histories_path %>&nbsp;|&nbsp;
+		<%= link_to "月別",  month_manage_mixi_active_histories_path %>&nbsp;|&nbsp;
+		日別
+	</p>
+	
+	<p>
+		<%= link_to "全て", manage_mixi_active_histories_path %>&nbsp;|&nbsp;
+		<% @years.each do |year| %>
+			<%= link_to year, year_manage_mixi_active_history_path(year) %>
+			<% if @years.last != year %>&nbsp;|&nbsp;<% end %>
+		<% end %>
+	</p>
+	
+	<table class="lineColorT" style="width:609px;">
+		<tr>
+			<th>日付</th>
+			<th>アクティブユーザ数</th>
+		</tr>
+	  <% @mixi_active_histories.each do |mixi_active_histories| %>
+		<tr>
+			<td><%=h mixi_active_histories.history_day %></td>
+		    <td><%=h mixi_active_histories.user_count %></td>
+		</tr>
+	  <% end %>
+	</table>
+	
+	<%= paginate_links(@mixi_active_histories) %>
+<% end %>

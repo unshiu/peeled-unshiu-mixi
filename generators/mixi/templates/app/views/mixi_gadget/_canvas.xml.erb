@@ -1,0 +1,25 @@
+<![CDATA[
+
+	<%= javascript_include_tag :defaults %>
+	<%= javascript_include_tag "jquery.protoload" %>
+	<%# javascript_include_tag "jquery.suggest" %>
+	<%= javascript_include_tag "suggest" %>
+	<%= javascript_include_tag "jquery.opensocial_simple" %>
+	<%= javascript_include_tag "mixi/jquery.drecom_mixi_gadget" %>
+
+	<%= javascript_include_tag("canvas.js") %>
+
+	<script type="text/javascript">
+	var base_url = '<%= "#{request.protocol}#{request.host}:#{request.port}" %>';
+	
+	$('#gadget_container').drecom_mixi_gadget({base_url: base_url,
+	                                           session_id: '<%= request.session_options[:id] %>',
+	                                           session_key: '<%= request.session_options[:key] %>',
+	                                           view_name: 'canvas'});
+
+	document.write('<link rel="stylesheet" type="text/css" href="' + base_url + '/stylesheets/style.css">');
+	document.write('<link rel="stylesheet" type="text/css" href="' + base_url + '/stylesheets/jquery.suggest.css">');
+	</script>
+	
+	<div id="gadget_container"></div>
+]]>

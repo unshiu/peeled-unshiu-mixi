@@ -1,0 +1,15 @@
+common: &common
+  
+  author: unshiu
+  author_email: unshiu@gmail.com
+  
+  active_day: 3 # active_day日以降にログイン履歴があるユーザをアクティブとする
+  
+development:
+  <<: *common
+
+test:
+  <<: *common
+
+production:
+  <<: *common

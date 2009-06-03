@@ -1,0 +1,23 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2="アクティブユーザ履歴検索" -%>
+
+<% content_for(:header_title) do %>
+	アクティブユーザ履歴検索
+<% end %>
+
+<%= render :partial => 'search_form' %>
+<br/>
+<br/>
+<h3>検索結果</h3>
+
+<table class="lineColorT" style="width:609px;">
+	<tr>
+		<th>日付</th>
+		<th>アクティブユーザ数</th>
+	</tr>
+  <% @active_users.each do |active_user| %>
+	<tr>
+		<td><%= active_user[:date] %></td>
+		<td><%= active_user[:count] %></td>
+	</tr>
+  <% end %>
+</table>
