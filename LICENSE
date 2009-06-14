@@ -1,5 +1,5 @@
-                          MOZILLA PUBLIC LICENSE
-                                Version 1.1
+                          UNSHIU PUBLIC LICENSE
+                                Version 1.0
 
                               ---------------
 
@@ -277,31 +277,29 @@
 6. Versions of the License.
 
      6.1. New Versions.
-     Netscape Communications Corporation ("Netscape") may publish revised
-     and/or new versions of the License from time to time. Each version
-     will be given a distinguishing version number.
+     Drecom Co., Ltd ("Drecom") may publish revised and/or new versions of
+	 the License from time to time. Each version will be given a distinguishing
+	 version number.
 
      6.2. Effect of New Versions.
      Once Covered Code has been published under a particular version of the
      License, You may always continue to use it under the terms of that
      version. You may also choose to use such Covered Code under the terms
-     of any subsequent version of the License published by Netscape. No one
-     other than Netscape has the right to modify the terms applicable to
+     of any subsequent version of the License published by Drecom. No one
+     other than Drecom has the right to modify the terms applicable to
      Covered Code created under this License.
 
      6.3. Derivative Works.
      If You create or use a modified version of this License (which you may
      only do in order to apply it to code which is not already Covered Code
      governed by this License), You must (a) rename Your license so that
-     the phrases "Mozilla", "MOZILLAPL", "MOZPL", "Netscape",
-     "MPL", "NPL" or any confusingly similar phrase do not appear in your
-     license (except to note that your license differs from this License)
-     and (b) otherwise make it clear that Your version of the license
-     contains terms which differ from the Mozilla Public License and
-     Netscape Public License. (Filling in the name of the Initial
-     Developer, Original Code or Contributor in the notice described in
-     Exhibit A shall not of themselves be deemed to be modifications of
-     this License.)
+     the phrases "Unshiu", "Drecom", "UPL" or any confusingly similar
+	 phrase do not appear in your license (except to note that your license
+	 differs from this License) and (b) otherwise make it clear that Your
+	 version of the license contains terms which differ from the Unshiu
+	 Public License. (Filling in the name of the Initial Developer, Original
+	 Code or Contributor in the notice described in Exhibit A shall not of
+	 themselves be deemed to be modifications of this License.)
 
 7. DISCLAIMER OF WARRANTY.
 
@@ -384,38 +382,25 @@
      EXCLUSION OR LIMITATION OF INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO
      THIS EXCLUSION AND LIMITATION MAY NOT APPLY TO YOU.
 
-10. U.S. GOVERNMENT END USERS.
-
-     The Covered Code is a "commercial item," as that term is defined in
-     48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial computer
-     software" and "commercial computer software documentation," as such
-     terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent with 48
-     C.F.R. 12.212 and 48 C.F.R. 227.7202-1 through 227.7202-4 (June 1995),
-     all U.S. Government End Users acquire Covered Code with only those
-     rights set forth herein.
-
-11. MISCELLANEOUS.
+10. MISCELLANEOUS.
 
      This License represents the complete agreement concerning subject
-     matter hereof. If any provision of this License is held to be
-     unenforceable, such provision shall be reformed only to the extent
-     necessary to make it enforceable. This License shall be governed by
-     California law provisions (except to the extent applicable law, if
-     any, provides otherwise), excluding its conflict-of-law provisions.
+     matter hereof. If any provision of this License is held to be unenforceable,
+     such provision shall be reformed only to the extent necessary to
+     make it enforceable. This License shall be governed by and construed
+	 in accordance with the laws of Japan (except to the extent applicable law,
+     if any, provides otherwise), excluding its conflict-of-law provisions.
      With respect to disputes in which at least one party is a citizen of,
-     or an entity chartered or registered to do business in the United
-     States of America, any litigation relating to this License shall be
-     subject to the jurisdiction of the Federal Courts of the Northern
-     District of California, with venue lying in Santa Clara County,
-     California, with the losing party responsible for costs, including
-     without limitation, court costs and reasonable attorneys' fees and
-     expenses. The application of the United Nations Convention on
+     or an entity chartered or registered to do business in Japan, any
+	 litigation relating to this License shall be subject to the jurisdiction of
+     the Tokyo District Court, with the losing party responsible for costs,
+     including without limitation, court costs and reasonable attorneys' fees
+     and expenses. The application of the United Nations Convention on
      Contracts for the International Sale of Goods is expressly excluded.
      Any law or regulation which provides that the language of a contract
-     shall be construed against the drafter shall not apply to this
-     License.
+     shall be construed against the drafter shall not apply to this License. 
 
-12. RESPONSIBILITY FOR CLAIMS.
+11. RESPONSIBILITY FOR CLAIMS.
 
      As between Initial Developer and the Contributors, each party is
      responsible for claims and damages arising, directly or indirectly,
@@ -424,7 +409,7 @@
      responsibility on an equitable basis. Nothing herein is intended or
      shall be deemed to constitute any admission of liability.
 
-13. MULTIPLE-LICENSED CODE.
+12. MULTIPLE-LICENSED CODE.
 
      Initial Developer may designate portions of the Covered Code as
      "Multiple-Licensed".  "Multiple-Licensed" means that the Initial
@@ -432,12 +417,12 @@
      Your choice of the NPL or the alternative licenses, if any, specified
      by the Initial Developer in the file described in Exhibit A.
 
-EXHIBIT A -Mozilla Public License.
+EXHIBIT A -Unshiu Public License.
 
-     ``The contents of this file are subject to the Mozilla Public License
+     ``The contents of this file are subject to the Unshiu Public License
      Version 1.1 (the "License"); you may not use this file except in
      compliance with the License. You may obtain a copy of the License at
-     http://www.mozilla.org/MPL/
+     http://wiki.unshiu.jp/UPL/ 
 
      Software distributed under the License is distributed on an "AS IS"
      basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
@@ -467,4 +452,3 @@ EXHIBIT A -Mozilla Public License.
      the notices in the Source Code files of the Original Code. You should
      use the text of this Exhibit A rather than the text found in the
      Original Code Source Code for Your Modifications.]
-
