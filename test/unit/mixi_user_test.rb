@@ -28,6 +28,21 @@ module MixiUserTestModule
     end
   end
   
+  define_method('test: count_owner は実際にガジェットをインストールしているユーザ数を取得する') do 
+    
+    # joined_at 日付が入っているのがガジェット保持者
+    assert_difference("MixiUser.count_owner", 1) do
+      mixi_user = MixiUser.create({"mixi_id" => "test_mixi_id_a", "nickname" => "nickname", "joined_at" => Time.now,
+                                   "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})
+    end
+    
+    # joined_at 日付が入っているなければカウント数は増えない
+    assert_difference("MixiUser.count_owner", 0) do
+      mixi_user = MixiUser.create({"mixi_id" => "test_mixi_id_b", "nickname" => "nickname",
+                                   "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})
+    end
+  end
+  
   define_method('test: mixiユーザを作成する') do 
     mixi_user = MixiUser.create_or_update({"mixi_id" => "test_mixi_id", "nickname" => "nickname", 
                                            "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})

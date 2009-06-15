@@ -26,9 +26,9 @@ module MixiLatestLoginModule
       
       latest = find_by_mixi_user_id(mixi_user_id)
       if latest.nil?
-        latest = create(:mixi_user_id => mixi_user_id, :latest_login => Time.now)
+        latest = create(:app_name => AppResources[:init][:service_name], :mixi_user_id => mixi_user_id, :latest_login => Time.now.to_i)
       else
-        latest.latest_login = Time.now
+        latest.latest_login = Time.now.to_i
         latest.save
       end
       latest
@@ -40,7 +40,7 @@ module MixiLatestLoginModule
     def find_by_mixi_user_id(base_user_id)
       return nil unless AppResources[:init][:tokyotyrant_on] 
       
-      find(:first, :conditions => ["mixi_user_id = ?", base_user_id])
+      find(:first, :conditions => ["app_name = ? and mixi_user_id = ?", AppResources[:init][:service_name], base_user_id])
     end
   end
   

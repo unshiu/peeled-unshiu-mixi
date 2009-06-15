@@ -49,6 +49,10 @@ module MixiUserModule
       user
     end
 
+    def count_owner
+      self.count(:conditions => ["joined_at is not null"])
+    end
+    
     # アプリを削除したユーザ数を返す
     def count_delete_mixi_users
       self.count_with_deleted(:conditions => ["status = ? ", MixiUser::STATUS_WITHDRAWAL])

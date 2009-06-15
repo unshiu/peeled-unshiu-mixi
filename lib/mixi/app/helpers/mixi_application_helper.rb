@@ -16,6 +16,10 @@ module MixiApplicationHelperModule
     link_to_function(name, script_function(options), html_options || options.delete(:html))
   end
 
+  def link_to_canvas(name, options = {}, html_options = nil)
+    link_to_function(name, "$.drecom_mixi_gadget.requestNavigateTo('canvas', '#{options[:url]}')", html_options || options.delete(:html))
+  end
+  
   def button_to_update(name, options = {}, html_options = nil)
     button_to_function(name, update_function(options), html_options)
   end
@@ -31,7 +35,12 @@ module MixiApplicationHelperModule
   def script_function(options)
     request_function(options, '$.drecom_mixi_gadget.requestScript')
   end
-
+  
+  def post_activity(options)
+    options[:priority] ||= "HIGH"
+    "$.opensocial_simple.postActivity({'TITLE' : '#{options[:title]}', 'BODY' : '#{options[:body]}'}, '#{options[:priority]}' , function () { console.log(arguments) } /* optional */);"
+  end
+  
 protected
 
   def request_function(options, function_name)
@@ -64,8 +73,8 @@ protected
       end
     end
 
-    function << ")"
-
+    function << ");"
+    
     return function
   end
     
