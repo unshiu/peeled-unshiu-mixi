@@ -9,6 +9,7 @@ module MixiApplicationHelperModule
   end
 
   def link_to_update(name, options = {}, html_options = nil)
+    options[:history] ||= true
     link_to_function(name, update_function(options), html_options || options.delete(:html))
   end
 
@@ -31,7 +32,7 @@ module MixiApplicationHelperModule
   def update_function(options)
     request_function(options, '$.drecom_mixi_gadget.requestContainer')
   end
-
+  
   def script_function(options)
     request_function(options, '$.drecom_mixi_gadget.requestScript')
   end
@@ -74,6 +75,10 @@ protected
     end
 
     function << ");"
+    
+    if options[:history]
+      function << "$.historyLoad('#{escape_javascript(options[:url])}');"
+    end
     
     return function
   end

@@ -21,4 +21,10 @@ private
     end
   end
    
+  def redirect_mixi_gadget_to(options = {}, response_status = {})
+    options[:owner] = @mixiapp_owner.mixi_id if @mixiapp_owner
+    options[request.session_options[:key]] = request.session_options[:id]
+    redirect_to(options, response_status)
+  end
+   
 end
