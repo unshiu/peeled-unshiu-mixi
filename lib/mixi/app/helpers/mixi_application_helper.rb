@@ -38,7 +38,7 @@ module MixiApplicationHelperModule
   
   def post_activity(options)
     options[:priority] ||= "HIGH"
-    "$.opensocial_simple.postActivity({'TITLE' : '#{options[:title]}', 'BODY' : '#{options[:body]}'}, '#{options[:priority]}' , function () { console.log(arguments) } /* optional */);"
+    "$.opensocial_simple.postActivity({'TITLE' : '#{options[:title]}', 'BODY' : '#{options[:body]}'}, '#{options[:priority]}' , function () { /* console.log(arguments) */ } /* optional */);"
   end
   
 protected
