@@ -16,16 +16,9 @@
 	<%= paginate_header(@mixi_active_histories) %>
 	
 	<p>
-		<%= link_to "年度別", year_manage_mixi_active_histories_path %>&nbsp;|&nbsp;
-		<%= link_to "月別",  month_manage_mixi_active_histories_path %>&nbsp;|&nbsp;
-		日別
-	</p>
-	
-	<p>
-		<%= link_to "全て", manage_mixi_active_histories_path %>&nbsp;|&nbsp;
-		<% @years.each do |year| %>
-			<%= link_to year, year_manage_mixi_active_history_path(year) %>
-			<% if @years.last != year %>&nbsp;|&nbsp;<% end %>
+		<% hash2sorted_array(MixiActiveHistory::BEFORE_DAYS_LIST).each do |history_days| %>
+			<%= link_to "#{history_days[1]}", :action => :index, :id => history_days[0] %>
+			<% if hash2sorted_array(MixiActiveHistory::BEFORE_DAYS_LIST).last[0] != history_days[0] %>&nbsp;|&nbsp;<% end %>
 		<% end %>
 	</p>
 	

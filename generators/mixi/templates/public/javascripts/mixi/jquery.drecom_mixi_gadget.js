@@ -11,8 +11,8 @@
 	$.fn[name_space] = function(config){
 		// 引数 デフォルト値
 		config = jQuery.extend({
-				session_key: "",
 				session_id: "",
+				session_key: "",
 				base_url: "",
 				app_url: "",
 				owner_only: false,
@@ -56,7 +56,7 @@
 
 		  var friend_params = {};
 		  friend_params[opensocial.DataRequest.PeopleRequestFields.MAX] = 1000;
-
+			
 		  req.add(req.newFetchPersonRequest(idspec_owner), "owner");
 			req.add(req.newFetchPersonRequest(idspec_viewer), "viewer");
 		  req.add(req.newFetchPeopleRequest(idspec_friends, friend_params), "friends");
@@ -65,9 +65,9 @@
 		      updateContainerError();
 		    } else {
 		      var params = {
-		        "owner" : person_to_json(res.get("owner").getData()),
-		        "viewer" : person_to_json(res.get("viewer").getData()),
-		        "friends" : people_to_json(res.get("friends").getData())
+		        "drecom_mixiapp_owner" : person_to_json(res.get("owner").getData()),
+		        "drecom_mixiapp_viewer" : person_to_json(res.get("viewer").getData()),
+		        "drecom_mixiapp_friends" : people_to_json(res.get("friends").getData())
 		      };
 		
 					if(config.owner_only) {
@@ -125,18 +125,40 @@
 		}
 		
 		/**
+		 *　session内容を再セットアップする
+		 */
+		klass.setSession = function(session_id, session_key) {
+			config.session_id = session_id;
+			config.session_key = session_key;
+		}
+		
+		klass.requestNavigateTo = function (view, pagename) {
+			var canvas_view = new gadgets.views.View(view);
+			$.opensocial_simple.postViewerData({'drecom_mixiapp_history' : pagename}, function () { 
+				//console.log(arguments) 
+			});
+			gadgets.views.requestNavigateTo(canvas_view, {'pagename' : pagename });
+		}
+		
+		/**
 		 * リクエスト内容をアプリケーションサーバへなげる
 		 */
 		klass.requestContainer = function (urlPath, urlParams, method) {
 			$.opensocial_simple.getPerson(function (result) {
+				if(urlParams == null) {
+					urlParams = new Array
+				} 
+				
 				if(typeof(urlParams) == "object" || urlParams instanceof Array) {
 					urlParams['owner'] = result.OWNER.getId();
+					if (config.session_id) urlParams[config.session_key] = config.session_id;
 				} else if(typeof(urlParams) == "string" || urlParams instanceof String) {
 					if (urlParams.length > 0) {
 						urlParams += encodeURI("&owner=" + result.OWNER.getId());
 					} else {
 						urlParams += encodeURI("?owner=" + result.OWNER.getId());
 					}
+					if (config.session_id) urlParams += encodeURI("&" + config.session_key + "=" + config.session_id);
 				}
 			});
 			

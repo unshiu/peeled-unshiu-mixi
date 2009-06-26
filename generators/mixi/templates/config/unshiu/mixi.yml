@@ -5,6 +5,9 @@ common: &common
   
   active_day: 3 # active_day日以降にログイン履歴があるユーザをアクティブとする
   
+  mixi_domain: platform001.mixi.jp
+  portal_token_reqular: rpctoken
+  
 development:
   <<: *common
 
@@ -12,4 +15,9 @@ test:
   <<: *common
 
 production:
+  portal_token_reqular: ^st=
+  <<: *common
+
+mixitest:
+  portal_token_reqular: ^st=
   <<: *common
