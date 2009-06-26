@@ -11,9 +11,11 @@
 	$.fn[name_space] = function(config){
 		// 引数 デフォルト値
 		config = jQuery.extend({
-				session_key: "",
 				session_id: "",
+				session_key: "",
 				base_url: "",
+				app_url: "",
+				owner_only: false,
 				view_name: gadgets.views.getCurrentView().getName()
 			},config);
 		
@@ -49,22 +51,38 @@
 		  var req = opensocial.newDataRequest();
 
 		  var idspec_owner = opensocial.IdSpec.PersonId.OWNER;
+			var idspec_viewer = opensocial.IdSpec.PersonId.VIEWER;
 		  var idspec_friends = opensocial.newIdSpec({'userId':opensocial.IdSpec.PersonId.OWNER, 'groupId':opensocial.IdSpec.GroupId.FRIENDS});
 
 		  var friend_params = {};
 		  friend_params[opensocial.DataRequest.PeopleRequestFields.MAX] = 1000;
-
+			
 		  req.add(req.newFetchPersonRequest(idspec_owner), "owner");
+			req.add(req.newFetchPersonRequest(idspec_viewer), "viewer");
 		  req.add(req.newFetchPeopleRequest(idspec_friends, friend_params), "friends");
 		  req.send(function (res) {
 			  if (res.hadError()) {
 		      updateContainerError();
 		    } else {
 		      var params = {
-		        "owner" : person_to_json(res.get("owner").getData()),
-		        "friends" : people_to_json(res.get("friends").getData())
+		        "drecom_mixiapp_owner" : person_to_json(res.get("owner").getData()),
+		        "drecom_mixiapp_viewer" : person_to_json(res.get("viewer").getData()),
+		        "drecom_mixiapp_friends" : people_to_json(res.get("friends").getData())
 		      };
-		      klass.requestContainer('/mixi_gadget/register', params, gadgets.io.MethodType.POST);
+		
+					if(config.owner_only) {
+						if(res.get("owner").getData().getField(opensocial.Person.Field.ID) != res.get("viewer").getData().getField(opensocial.Person.Field.ID)) {
+							window.open(config.app_url, '_parent');
+							return false;
+						}
+					}
+				
+					$.opensocial_simple.getViewerData(function (data) { 
+						if(data["drecom_mixiapp_history"] != null) {
+							params['history'] = data["drecom_mixiapp_history"];
+						}
+		      	klass.requestContainer('/mixi_gadget/register', params, gadgets.io.MethodType.POST);
+					});
 		    }
 		  });
 		}
@@ -98,13 +116,55 @@
 		  requestContainer('/mixi_gadget/preview');
 		}
 		
+		klass.requestNavigateTo = function (view, pagename) {
+			var canvas_view = new gadgets.views.View(view);
+			$.opensocial_simple.postViewerData({'drecom_mixiapp_history' : pagename}, function () { 
+				//console.log(arguments) 
+			});
+			gadgets.views.requestNavigateTo(canvas_view, {'pagename' : pagename });
+		}
+		
+		/**
+		 *　session内容を再セットアップする
+		 */
+		klass.setSession = function(session_id, session_key) {
+			config.session_id = session_id;
+			config.session_key = session_key;
+		}
+		
+		klass.requestNavigateTo = function (view, pagename) {
+			var canvas_view = new gadgets.views.View(view);
+			$.opensocial_simple.postViewerData({'drecom_mixiapp_history' : pagename}, function () { 
+				//console.log(arguments) 
+			});
+			gadgets.views.requestNavigateTo(canvas_view, {'pagename' : pagename });
+		}
+		
 		/**
 		 * リクエスト内容をアプリケーションサーバへなげる
 		 */
 		klass.requestContainer = function (urlPath, urlParams, method) {
+			$.opensocial_simple.getPerson(function (result) {
+				if(urlParams == null) {
+					urlParams = new Array
+				} 
+				
+				if(typeof(urlParams) == "object" || urlParams instanceof Array) {
+					urlParams['owner'] = result.OWNER.getId();
+					if (config.session_id) urlParams[config.session_key] = config.session_id;
+				} else if(typeof(urlParams) == "string" || urlParams instanceof String) {
+					if (urlParams.length > 0) {
+						urlParams += encodeURI("&owner=" + result.OWNER.getId());
+					} else {
+						urlParams += encodeURI("?owner=" + result.OWNER.getId());
+					}
+					if (config.session_id) urlParams += encodeURI("&" + config.session_key + "=" + config.session_id);
+				}
+			});
+			
 			requestServer(urlPath, urlParams, function(obj) {
 		    if (obj && obj.text && obj.text.length>0) {
-		      updateContainer(obj.text);
+			    updateContainer(obj.text);
 		    } else {
 		      updateContainerError();
 		    }
@@ -114,7 +174,7 @@
 		/**
 		 * JSによるリクエスト内容をアプリケーションサーバへなげる
 		 */
-		function requestScript(urlPath, urlParams, method) {
+		klass.requestScript = function (urlPath, urlParams, method) {
 		  $('#gadget_container').startWaiting();
 		  requestServer(urlPath, urlParams, function(obj) {
 		    $('#gadget_container').stopWaiting();
@@ -136,8 +196,9 @@
 		  } else if (typeof urlParams == "string") {
 		    urlParams = parseQuery(urlParams);
 		  }
+		
 		  if (config.session_id) urlParams[config.session_key] = config.session_id;
-
+			
 		  var params = {};
 		  params[gadgets.io.RequestParameters.METHOD] = method;
 		  params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
@@ -150,7 +211,13 @@
 		    url = config.base_url + urlPath;
 
 		    var query = toQueryString(urlParams);
-		    if (query.length>0) url += "?" + query;
+		    if (query.length>0) {
+					if(url.indexOf("?") != -1) {
+						url += "&" + query;
+					} else {
+						url += "?" + query;
+					}
+				}
 		  }
 		  gadgets.io.makeRequest(url, callbackFunction, params);
 		}
@@ -178,14 +245,17 @@
 		      var kv = pairs[i].split("=");
 					var params_key = decodeURIComponent(kv[0].replace(/\+/g, ' '));
 					var params_value = kv[1] ? decodeURIComponent(kv[1].replace(/\+/g, ' ')) : '';
-
+					
 					if(params[params_key] == null) {
-						params[params_key] = params_value;
-
-					} else {
+						// notihng
+						
+					} else if(typeof(params[params_key]) == "string" || params[params_key] instanceof String) {
 						params_value = [params[params_key], params_value];
-						params[params_key] = params_value;
+						
+					} else if(typeof(params[params_key]) == "array" || params[params_key] instanceof Array) {
+						params_value = params[params_key].concat([params_value]);
 					}
+					params[params_key] = params_value;
 		    }
 		  }
 		  return params;
@@ -209,6 +279,7 @@
 		      }
 		    }
 		  }
+
 		  $("#gadget_container").html(html);
 		  gadgets.window.adjustHeight();
 		}
@@ -235,7 +306,7 @@
 		 * スクリプトの実行に問題が起こった際の処理。
 		 */
 		function runScriptError() {
-		  openAlert('エラーが発生しました。');
+		  alert('エラーが発生しました。');
 		}
 
 		/**

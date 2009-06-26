@@ -3,11 +3,13 @@
 one:
   history_day: 2009-01-01 
   user_count: 1
+  before_days: 1
   created_at: <%= Time.now.to_s :db %>
   updated_at: <%= Time.now.to_s :db %>
   
 two:
   history_day: 2009-01-02
   user_count: 1
+  before_days: 3
   created_at: <%= Time.now.to_s :db %>
   updated_at: <%= Time.now.to_s :db %>

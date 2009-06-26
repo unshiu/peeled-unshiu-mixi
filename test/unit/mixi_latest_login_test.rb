@@ -16,7 +16,6 @@ module MixiLatestLoginTestModule
   
   define_method('test: 最終ログイン日を更新する') do
     mixi_latest_login = MixiLatestLogin.update_latest_login(1)
-    p mixi_latest_login
     assert_not_nil(mixi_latest_login.latest_login) # 最終日付がある
   end
   
@@ -31,7 +30,7 @@ module MixiLatestLoginTestModule
   end
   
   define_method('test: 最終ログイン日が１ヶ月以内のユーザ検索') do
-    puts Benchmark::CAPTION
+    #puts Benchmark::CAPTION
     #puts Benchmark.measure{
     #  assert_not_nil(MixiLatestLogin.count(:conditions => ["latest_login > ?", Time.now - 1.months]))
     #}

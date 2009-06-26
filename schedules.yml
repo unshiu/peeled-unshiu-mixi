@@ -1,3 +1,9 @@
   :mixi_active_history_create_worker: 
     :update_yesterday_active_count:
-      :trigger_args: 0 0 3 * * * *
+      :trigger_args: 0 0 0 * * * *
+    :update_last_3days_active_count:
+      :trigger_args: 0 0 0 * * * *
+    :update_last_week_active_count:
+      :trigger_args: 0 0 0 * * * *
+    :update_last_month_active_count:
+      :trigger_args: 0 0 0 1 * * *

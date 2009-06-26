@@ -91,4 +91,5 @@ module MixiGadgetControllerTestModule
     assert_response :success
     assert_template 'timeout'
   end
+  
 end

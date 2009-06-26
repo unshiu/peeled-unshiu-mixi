@@ -18,6 +18,10 @@ module MixiActiveHistoryModule
       base.class_eval do
         acts_as_paranoid
         
+        validates_presence_of :before_days, :history_day, :user_count
+        
+        const_set('BEFORE_DAYS_LIST', { 1 => "前日", 3 => "３日", 7 => "１週間", 30 => "１ヶ月" })
+        
         named_scope :period, lambda { |start_day, end_day| 
           {:conditions => ['history_day >= ? and history_day <= ?', start_day, end_day] } 
         }
@@ -46,35 +50,6 @@ module MixiActiveHistoryModule
       end_day = Date.new(year, 12, 31)
       
       period(start_day, end_day)
-    end
-    
-    # 指定範囲内の月別のアクティブ数集計数を返す
-    # _param1_:: start_date Date
-    # _param2_:: end_date Date
-    def summary_period_by_year_month(start_date, end_date)
-      query = "select history_day, sum(user_count) as user_count"
-      query << " from mixi_active_histories"
-      query << " where history_day >= '#{start_date}' and history_day <= '#{end_date}'"
-      query << " group by extract(year_month from history_day)"
-      find_by_sql([sanitize_sql(query)])
-    end
-    
-    # 月別のアクティブ数集計数を返す
-    # _param1_:: year なければ全体
-    def summary_by_year_month(year)
-      query = "select history_day, sum(user_count) as user_count"
-      query << " from mixi_active_histories"
-      query << " where year(history_day) = #{year}" unless year.nil?
-      query << " group by extract(year_month from history_day)"
-      find_by_sql([sanitize_sql(query)])
-    end
-    
-    
-    # 年度別のアクティブ数集計数を返す
-    # _param1_:: year
-    def summary_by_year
-      find_by_sql(["select history_day, sum(user_count) as user_count 
-                    from mixi_active_histories group by year(history_day)"])
     end
     
   end
