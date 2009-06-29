@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+a:
+  id: 1
+  create_mixi_user_id: 1
+  receipt_mixi_user_id: 1
+  title: MyText
+  body: MyText
+
+b:
+  id: 2
+  create_mixi_user_id: 1
+  receipt_mixi_user_id: 1
+  title: MyText
+  body: MyText
