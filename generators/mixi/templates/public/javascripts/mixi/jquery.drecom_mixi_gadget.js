@@ -282,6 +282,7 @@
 
 		  $("#gadget_container").html(html);
 		  gadgets.window.adjustHeight();
+			
 		}
 
 		/**
@@ -378,10 +379,27 @@
 			return buf.join("");	
 		}
 		
+		/**
+		 *　指定位置へスクロールする
+		 */
+		klass.scrollTo = function(point_id) {
+			var scrollpoint = 0
+			if($.browser.mozilla) {
+				gadgets.window.adjustHeight(1);
+				setTimeout(function(){gadgets.window.adjustHeight();}, 0);
+			} else {
+				if(point_id != null) {
+					scrollpoint = $("#" + point_id).position().top;
+				}
+				window.parent.scrollTo(0, scrollpoint);
+			}
+			return false;
+		}
+		
 		$[name_space] = klass;
 		$[name_space.replace(/_([a-z])/g, function () { return arguments[1].toUpperCase() })] = klass;
 		
 		return this;
 	};
-	
+
 })(jQuery);
