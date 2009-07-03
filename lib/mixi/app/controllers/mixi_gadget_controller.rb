@@ -17,11 +17,6 @@ module MixiGadgetControllerModule
   end
   
   def register
-    unless session[:valid]
-      render :action => 'timeout'
-      return
-    end
-    
     owner_data = JSON.parse(params['drecom_mixiapp_owner'])
     viewer_data = JSON.parse(params['drecom_mixiapp_viewer'])
     friends_data = JSON.parse(params['drecom_mixiapp_friends'])
@@ -45,17 +40,18 @@ module MixiGadgetControllerModule
     session[:viewer] = MixiUser.find(viewer.id)
     session[:valid] = nil
     
-    url = params[:history].nil? ? "/mixi_gadget/top" : params[:history]
-    url += url.index("?").nil? ? "?" : "&"
-    url += "#{request.session_options[:key]}=#{request.session_options[:id]}"
-    redirect_to url
+    if params[:history]
+      history = params[:history].split(/\//)
+      redirect_mixi_gadget_to :controller => history[0], :action => history[1]
+    else
+      redirect_mixi_gadget_to :controller => "mixi_gadget", :action => "top"
+    end
   end
   
   def timeout
   end
   
   def index
-    session[:valid] = true
     respond_to do |format|
       format.xml
     end

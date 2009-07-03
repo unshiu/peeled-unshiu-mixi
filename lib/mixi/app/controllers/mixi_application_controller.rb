@@ -6,11 +6,16 @@ module MixiApplicationControllerModule
   
 private
   
+  def current_mixiapp_viewer
+    session[:viewer] ? session[:viewer] : MixiUser.find_by_mixi_id(params[:viewer])
+  end
+  
+  def current_mixiapp_onwer
+    session[:owner] ? session[:owner] : MixiUser.find_by_mixi_id(params[:owner])
+  end
+  
   def validate_session
-    @mixiapp_owner = MixiUser.find_by_mixi_id(params[:owner]) if params[:owner]
-    @mixiapp_owner = session[:owner] if session[:owner]
-    
-    if @mixiapp_owner
+    if current_mixiapp_viewer
       true
     else
       respond_to do |format|
@@ -22,7 +27,7 @@ private
   end
    
   def redirect_mixi_gadget_to(options = {}, response_status = {})
-    options[:owner] = @mixiapp_owner.mixi_id if @mixiapp_owner
+    options[:viewer] = current_mixiapp_viewer
     options[request.session_options[:key]] = request.session_options[:id]
     redirect_to(options, response_status)
   end

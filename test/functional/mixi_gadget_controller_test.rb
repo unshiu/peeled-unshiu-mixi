@@ -31,7 +31,7 @@ module MixiGadgetControllerTestModule
                                   "profile_url" => "http://unshiu.drecom.jp/profile/501",
                                   "thumbnail_url" => "http://unshiu.drecom.jp/profile/501/profile.gif" } ].to_json
     
-    post :register, :owner => owner, :friends => friends
+    post :register, :drecom_mixiapp_owner => owner, :drecom_mixiapp_viewer => owner, :drecom_mixiapp_friends => friends
     assert_response :redirect
     assert_redirected_to :action => 'top'
     
@@ -61,7 +61,7 @@ module MixiGadgetControllerTestModule
                                     "profile_url" => "http://unshiu.drecom.jp/profile/999",
                                     "thumbnail_url" => "http://unshiu.drecom.jp/profile/999/profile.gif" } ].to_json
     
-    post :register, :owner => owner, :friends => friends
+    post :register, :drecom_mixiapp_owner => owner, :drecom_mixiapp_viewer => owner, :drecom_mixiapp_friends => friends
     assert_response :redirect
     assert_redirected_to :action => 'top'
     
@@ -82,14 +82,6 @@ module MixiGadgetControllerTestModule
     assert_equal(mixi_user.profile_url, "http://unshiu.drecom.jp/profile/999")
     assert_equal(mixi_user.thumbnail_url, "http://unshiu.drecom.jp/profile/999/profile.gif")
     assert_nil(mixi_user.joined_at) # 今回はじめて登録された＝アプリを利用していない
-  end
-  
-  define_method('test: 有効なセッションではないのでtimout画面を表示する') do 
-    session[:valid] = false
-    
-    post :register
-    assert_response :success
-    assert_template 'timeout'
   end
   
 end
