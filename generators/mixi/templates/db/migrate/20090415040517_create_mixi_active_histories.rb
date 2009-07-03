@@ -2,6 +2,7 @@ class CreateMixiActiveHistories < ActiveRecord::Migration
   def self.up
     create_table :mixi_active_histories do |t|
       t.date    :history_day 
+      t.integer :before_days
       t.integer :user_count
 
       t.datetime :deleted_at
