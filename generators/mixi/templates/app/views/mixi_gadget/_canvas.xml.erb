@@ -43,7 +43,7 @@
 		}
 	
 		$.opensocial_simple.getPerson(function (result) {
-			$.historyInit(pageload, "/mixi_gadget/top?owner=" + result.OWNER.getId());
+			$.historyInit(pageload, "/mixi_gadget/top?viewer=" + result.VIEWER.getId());
 		});
 		
 	});
