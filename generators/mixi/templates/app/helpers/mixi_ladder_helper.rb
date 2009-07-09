@@ -1,0 +1,2 @@
+module MixiLadderHelper
+end

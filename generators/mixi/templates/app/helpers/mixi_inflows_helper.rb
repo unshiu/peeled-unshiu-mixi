@@ -1,0 +1,2 @@
+module MixiInflowsHelper
+end

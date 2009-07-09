@@ -16,6 +16,7 @@
 				base_url: "",
 				app_url: "",
 				owner_only: false,
+				app_name: "",
 				view_name: gadgets.views.getCurrentView().getName()
 			},config);
 		
@@ -83,6 +84,7 @@
 						}
 		      	klass.requestContainer('/mixi_gadget/register', params, gadgets.io.MethodType.POST);
 					});
+					klass.infollow_iframe();
 		    }
 		  });
 		}
@@ -394,6 +396,16 @@
 				window.parent.scrollTo(0, scrollpoint);
 			}
 			return false;
+		}
+		
+		/**
+		 *　流入を確認するためのiframeを表示する
+		 */
+		klass.infollow_iframe = function() {
+			$.opensocial_simple.getPerson(function (result) {
+				var iframe = "<iframe src='" + config.base_url +"/mixi_ladder/conversion?app_name=" + config.app_name + "&mixi_user_id=" + result.VIEWER.getId() + "' name='sample' width='200' height='150'></iframe>"
+				$("#infollow_iframe").html(iframe);
+			});
 		}
 		
 		$[name_space] = klass;

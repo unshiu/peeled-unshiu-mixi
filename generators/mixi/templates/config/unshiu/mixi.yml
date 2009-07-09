@@ -8,6 +8,10 @@ common: &common
   mixi_domain: platform001.mixi.jp
   portal_token_reqular: rpctoken
   
+  default_inflow_next_url: http://social.drecom.co.jp/
+  inflow_cookie_limit: 14
+  inflow_cookie_domain: .mixiapp.drecom.jp
+  
 development:
   <<: *common
 

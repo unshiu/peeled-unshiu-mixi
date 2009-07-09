@@ -7,3 +7,8 @@
       :trigger_args: 0 0 0 * * * *
     :update_last_month_active_count:
       :trigger_args: 0 0 0 1 * * *
+  :mixi_inflow_summary_create_worker:
+    :update_yesterday:
+      :trigger_args: 0 0 0 * * * *
+    :update_month:
+      :trigger_args: 0 0 0 1 * * *

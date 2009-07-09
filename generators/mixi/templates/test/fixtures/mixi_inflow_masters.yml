@@ -1,0 +1,31 @@
+# == Schema Information
+# Schema version: 20090703073100
+#
+# Table name: mixi_inflow_masters
+#
+#  id         :integer(4)      not null, primary key
+#  route_name :string(255)     not null
+#  route_key  :string(255)     not null
+#  deleted_at :datetime
+#  created_at :datetime
+#  updated_at :datetime
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# one:
+#   column: value
+#
+# two:
+#   column: value
+
+total:
+  id: 1
+  route_name: "累計"
+  route_key: "total"
+other:
+  id: 2
+  route_name: "その他"
+  route_key: "other"
+blog:
+  route_name: "blog"
+  route_key: "blog_key"

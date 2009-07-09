@@ -1,0 +1,9 @@
+
+all:
+  id: 1
+  route_name: "累計"
+  route_key: "all"
+other:
+  id: 2
+  route_name: "その他"
+  route_key: "other"

@@ -1,0 +1,66 @@
+<%- @pan1="mixiアプリ" -%><%- @pan2=t('activerecord.models.mixi inflow summary') -%>
+<%- @pan3="#{l(@total_inflow_summary.start_at)}〜#{l(@total_inflow_summary.end_at)}" -%>
+
+<% content_for(:header_title) do %>
+	<%= "#{l(@total_inflow_summary.start_at)}〜#{l(@total_inflow_summary.end_at)}" %>
+<% end %>
+
+<h3>全媒体コンバージョン率</h3>
+
+<table border="0" cellpadding="3" cellspacing="1" class="lineColorLW" style="width:609px;">
+<tbody>
+  <tr>
+    <th style="width:140px;">
+		<%= t('activerecord.attributes.mixi_inflow_summary.start_at') %>〜<%= t('activerecord.attributes.mixi_inflow_summary.end_at') %>
+	</th>
+    <td><%= l(@total_inflow_summary.start_at) %>〜<%= l(@total_inflow_summary.end_at) %></td>
+  </tr>
+  <tr>
+    <th style="width:140px;"><%= t('activerecord.attributes.mixi_inflow_summary.inflow_mixi_user_count') %></th>
+    <td><%= h @total_inflow_summary.inflow_mixi_user_count %></td>
+  </tr>
+  <tr>
+    <th style="width:140px;"><%= t('activerecord.attributes.mixi_inflow_summary.registed_mixi_user_count') %></th>
+    <td><%= h @total_inflow_summary.registed_mixi_user_count %></td>
+  </tr>
+  <tr>
+    <th style="width:140px;"><%= t('view.noun.conversion') %></th>
+    <td><%= number_to_percentage(@total_inflow_summary.conversion, :precision => 1) %></td>
+  </tr>
+</tbody>
+</table>
+
+<h3>媒体別コンバージョン率</h3>
+
+<table class="lineColorT" style="width:609px;">
+<tr>
+	<th width="309px">
+		<%= t('activerecord.attributes.mixi_inflow_master.route_name') %>
+	</th>
+	<th width="100px">
+		<%= t('activerecord.attributes.mixi_inflow_summary.inflow_mixi_user_count') %>
+	</th>
+	<th width="100px">
+		<%= t('activerecord.attributes.mixi_inflow_summary.registed_mixi_user_count') %>
+	</th>
+	<th width="100px">
+		<%= t('view.noun.conversion') %>
+	</th>
+</tr>
+<% for mixi_inflow_summary in @mixi_inflow_summaries %>
+<tr>
+	<td>
+		<%=h mixi_inflow_summary.mixi_inflow_master.route_name %>
+	</td>
+	<td class="textalignR">
+		<%= number_with_delimiter(mixi_inflow_summary.inflow_mixi_user_count) %>
+	</td>
+	<td class="textalignR">
+		<%= number_with_delimiter(mixi_inflow_summary.registed_mixi_user_count) %>
+	</td>
+	<td class="textalignR">
+		<%= number_to_percentage(mixi_inflow_summary.conversion, :precision => 1) %>
+	</td>
+</tr>
+<% end %>
+</table>

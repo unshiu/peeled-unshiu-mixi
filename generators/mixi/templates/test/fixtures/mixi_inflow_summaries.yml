@@ -1,0 +1,35 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+day:
+  summary_type: <%= MixiInflowSummary::SUMMARY_DAY %>
+  start_at: <%= Time.now.to_s :db %>
+  end_at: <%= Time.now.to_s :db %>
+  inflow_mixi_user_count: 1000
+  registed_mixi_user_count: 100
+  mixi_inflow_master: blog
+  created_at: <%= Time.now.last_month.beginning_of_month.to_s :db %>
+total:
+  summary_type: <%= MixiInflowSummary::SUMMARY_DAY %>
+  start_at: <%= Time.now.to_s :db %>
+  end_at: <%= Time.now.to_s :db %>
+  inflow_mixi_user_count: 1000
+  registed_mixi_user_count: 100
+  mixi_inflow_master_id: 1 
+  created_at: <%= Time.now.last_month.beginning_of_month.to_s :db %>
+month:
+  summary_type: <%= MixiInflowSummary::SUMMARY_MONTH %>
+  start_at: <%= Time.now.to_s :db %>
+  end_at: <%= Time.now.to_s :db %>
+  inflow_mixi_user_count: 1000
+  registed_mixi_user_count: 100
+  mixi_inflow_master: blog
+  created_at: <%= Time.now.last_month.beginning_of_month.to_s :db %>
+month_total:
+  summary_type: <%= MixiInflowSummary::SUMMARY_MONTH %>
+  start_at: <%= Time.now.to_s :db %>
+  end_at: <%= Time.now.to_s :db %>
+  inflow_mixi_user_count: 1000
+  registed_mixi_user_count: 100
+  mixi_inflow_master_id: 1 
+  created_at: <%= Time.now.last_month.beginning_of_month.to_s :db %>
+  

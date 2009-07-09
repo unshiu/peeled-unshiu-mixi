@@ -1,0 +1,36 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2=t('view.noun.mixi_inflow_master') -%><%- @pan3="#{@mixi_inflow_master.route_name}" -%>
+
+<% content_for(:header_title) do %>
+	<%=h @mixi_inflow_master.route_name %>
+<% end %>
+
+<ul class="list">
+	<% if editable_master %>
+		<li><%= link_to '編集する', edit_manage_mixi_inflow_master_path(@mixi_inflow_master) %></li>
+	<% end %>
+	<% if deletable_master %>
+		<li><%= link_to '削除する', destroy_confirm_manage_mixi_inflow_master_path(@mixi_inflow_master) %></li>
+	<% end %>
+	<li><%= link_to '一覧へ戻る', manage_mixi_inflow_masters_path %></li>
+</ul>
+
+<table border="0" cellpadding="3" cellspacing="1" class="lineColorLW" style="width:609px;">
+<tbody>
+  <tr>
+    <th style="width:140px;"><%= t('activerecord.attributes.mixi_inflow_master.route_name') %></th>
+    <td><%= h @mixi_inflow_master.route_name %></td>
+  </tr>
+  <tr>
+    <th style="width:140px;"><%= t('activerecord.attributes.mixi_inflow_master.route_key') %></th>
+    <td><%= h @mixi_inflow_master.route_key %></td>
+  </tr>
+  <% if publish_master %>
+  <tr>
+    <th style="width:140px;">コード</th>
+    <td>
+		<textarea readonly cols="40"><%=h @mixi_inflow_master.inflow_mark_url%></textarea>
+	</td>
+  </tr>
+  <% end %>
+</tbody>
+</table>

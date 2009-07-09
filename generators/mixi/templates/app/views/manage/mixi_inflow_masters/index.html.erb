@@ -1,0 +1,39 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2=t('view.noun.mixi_inflow_master') -%>
+
+<% content_for(:header_title) do %>
+	<%= t('view.noun.mixi_inflow_master') %>一覧
+<% end %>
+
+<h3><%= t('view.noun.mixi_inflow_master') %>一覧</h3>
+
+<ul class="list">
+	<li><%= link_to "#{t('view.noun.mixi_inflow_master')}作成", new_manage_mixi_inflow_master_path %></li>
+</ul>
+
+<% if @mixi_inflow_masters.size.zero? %>
+	<%= t('view.noun.mixi_inflow_master') %>がありません。
+	
+<% else %>
+	<%= paginate_header(@mixi_inflow_masters) %>
+	<table class="lineColorT" style="width:609px;">
+	<tr>
+		<th width="509px">
+			<%= t('activerecord.attributes.mixi_inflow_master.route_name') %>
+		</th>
+		<th width="120px">
+			<%= t('activerecord.attributes.mixi_inflow_master.updated_at') %>
+		</th>
+	</tr>
+	<% for mixi_inflow_master in @mixi_inflow_masters %>
+	<tr>
+		<td>
+			<%= link_to mixi_inflow_master.route_name, manage_mixi_inflow_master_path(mixi_inflow_master.id) %>
+		</td>
+		<td class="textalignC">
+			<%= l(mixi_inflow_master.updated_at, :format => :short) %>
+		</td>
+	</tr>
+	<% end %>
+	</table>
+	<%= paginate_links(@mixi_inflow_masters) %>
+<% end %>

@@ -5,7 +5,10 @@
 	<%= javascript_include_tag "mixi/jquery.drecom_mixi_gadget" %>
 	<%= javascript_include_tag "jquery.history.js" %>
 	<%= javascript_include_tag "jquery.cookie.js" %>
+	<%= javascript_include_tag "jquery.validate.js" %>
+	<%= javascript_include_tag "messages_ja.js" %>
 	<%= javascript_include_tag "jquery.bgiframe.min.js" %>
+	<%= javascript_include_tag "iepngfix.js" %>
 	
 	<%= javascript_include_tag("canvas.js") %>
 
@@ -13,12 +16,31 @@
 	
 	var base_url = '<%= "#{request.protocol}#{request.host}:#{request.port}" %>';
 	$('#gadget_container').drecom_mixi_gadget({base_url: base_url,
-											   app_url: '<%= AppResources[:mixi][:application_run_url] %>',
+											   app_name: '<%= AppResources[:init][:service_name] %>',
+											   app_url: '<%= AppResources[:baton][:mixi_application_run_url] %>',
 											   owner_only: true,
 	                                           view_name: 'canvas'});
 
 	document.write('<link rel="stylesheet" type="text/css" href="' + base_url + '/stylesheets/style.css">');
-	document.write('<link rel="stylesheet" type="text/css" href="' + base_url + '/stylesheets/default.css">');
+	
+	/*
+	$(function(){
+		new function () {
+		    if (opensocial.getEnvironment().getDomain() !== 'osde') return;
+		    gadgets.views.requestNavigateTo = function (view, param) {
+		        var href = window.parent.location.href;
+		        param = gadgets.json.stringify(param).replace(/^\{|\}$/g, '');
+		        param = escape(param);
+		        var next = href
+		            .replace(/(&|\?)view=\w+/, '$1view='+view.getName())
+		            .replace(/(&|\?)appParams=\{.+?\}/, '$1appParams={'+param+'}')
+		        ;
+		
+		        window.parent.location.href = next;
+		    };
+		};
+	});
+*/
 
 	$(function(){
 		var value = gadgets.views.getParams();
@@ -26,6 +48,10 @@
 			$.opensocial_simple.postViewerData({'drecom_mixiapp_history' : null}, function () { 
 				//console.log(arguments) 
 			});
+		}
+		var ua = $.browser;
+ 		if(ua.msie){ // IE only
+			DD_belatedPNG.fix('.boxMiddle,.newFeed li a,li.right a');
 		}
 		
 		function pageload(hash) {
@@ -51,4 +77,5 @@
 	</script>
 	
 	<div id="gadget_container"></div>
+	<div id="infollow_iframe"></div>
 ]]>

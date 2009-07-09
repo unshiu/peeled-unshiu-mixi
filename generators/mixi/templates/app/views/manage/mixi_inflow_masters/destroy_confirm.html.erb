@@ -1,0 +1,16 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2=t('view.noun.mixi_inflow_master') -%><%- @pan3="削除確認" -%>
+
+<% content_for(:header_title) do %>
+	<%= t('view.noun.mixi_inflow_master') %>削除確認
+<% end %>
+
+<h3><%= t('view.noun.mixi_inflow_master') %>削除確認</h3>
+
+<% form_for @mixi_inflow_master, :url => { :action => "destroy", :id => @mixi_inflow_master.id }, :html => {:method => :delete} do %>
+	<%= render :partial => 'confirm' %>
+	
+	<div class="bot_btn">
+		<%= mng_submit_tag '削除' %>
+		<%= mng_cancel_tag %>
+	</div>
+<% end %>

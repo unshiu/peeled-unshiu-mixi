@@ -1,0 +1,85 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2=t('view.noun.mixi_inflow_summary') -%>
+
+<% content_for(:header_title) do %>
+	<%= t('activerecord.models.mixi inflow summary') %>
+<% end %>
+
+<h3>履歴検索</h3>
+
+<% form_for :mixi_inflow_summary_search, :url => { :action => :search } do |f| %>
+	<table class="lineColorL" style="width:609px;">
+		<tr>
+			<th><%= t('activerecord.attributes.mixi_inflow_summary.start_at') %></th>
+			<td>
+				<%= f.date_select 'start_at', :use_month_numbers => true, :default => Date.today - 7.days %>
+				<%= adjusted_datetime 'mixi_inflow_summary_search', 'start_at' %>
+			</td>
+		</tr>
+		<tr>
+			<th><%= t('activerecord.attributes.mixi_inflow_summary.end_at') %></th>
+			<td>
+				<%= f.date_select 'end_at', :use_month_numbers => true, :default => Time.now %>
+				<%= adjusted_datetime 'mixi_inflow_summary_search', 'end_at' %>
+			</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>
+				<%= f.select :mixi_inflow_master_id, @mixi_inflow_masters.collect {|u| [ u.route_name, u.id ] }, :selected => @mixi_inflow_summary_search.try(:mixi_inflow_master_id).to_i  %>
+			</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>
+				<%= f.radio_button "type", "day", {"checked" => "checked"} %>日別
+				<%= f.radio_button "type", "month" %>月別
+			</td>
+		</tr>
+	</table>
+	<div class="bot_btn">
+		<%= mng_submit_tag '検索' %>
+	</div>
+<% end %>
+
+<h3>コンバージョン率</h3>
+
+
+<% if @mixi_inflow_summaries.size.zero? %>
+	履歴がありません。
+	
+<% else %>
+	<%= paginate_header(@mixi_inflow_summaries) %>
+	<table class="lineColorT" style="width:609px;">
+	<tr>
+		<th width="309px">
+			<%= t('activerecord.attributes.mixi_inflow_summary.start_at') %>〜<%= t('activerecord.attributes.mixi_inflow_summary.end_at') %>
+		</th>
+		<th width="100px">
+			<%= t('activerecord.attributes.mixi_inflow_summary.inflow_mixi_user_count') %>
+		</th>
+		<th width="100px">
+			<%= t('activerecord.attributes.mixi_inflow_summary.registed_mixi_user_count') %>
+		</th>
+		<th width="100px">
+			<%= t('view.noun.conversion') %>
+		</th>
+	</tr>
+	<% for mixi_inflow_summary in @mixi_inflow_summaries %>
+	<tr>
+		<td>
+			<%= link_to "#{l(mixi_inflow_summary.start_at)}〜#{l(mixi_inflow_summary.end_at)}", manage_mixi_inflow_summary_path(mixi_inflow_summary) %>
+		</td>
+		<td class="textalignR">
+			<%=h mixi_inflow_summary.inflow_mixi_user_count %>
+		</td>
+		<td class="textalignR">
+			<%=h mixi_inflow_summary.registed_mixi_user_count %>
+		</td>
+		<td class="textalignR">
+			<%= number_to_percentage(mixi_inflow_summary.conversion, :precision => 1) %>
+		</td>
+	</tr>
+	<% end %>
+	</table>
+	<%= paginate_links(@mixi_inflow_summaries) %>
+<% end %>

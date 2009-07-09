@@ -1,0 +1,55 @@
+# == Schema Information
+# Schema version: 20090703073100
+#
+# Table name: mixi_inflows
+#
+#  id                    :integer(4)      not null, primary key
+#  mixi_inflow_master_id :integer(4)      not null
+#  referrer              :text
+#  tracking_key          :string(255)
+#  app_name              :string(255)
+#  mixi_user_id          :integer(4)
+#  registed_at           :datetime
+#  deleted_at            :datetime
+#  created_at            :datetime
+#  updated_at            :datetime
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+# one:
+#   column: value
+#
+# two:
+#   column: value
+default:
+  mixi_inflow_master: blog
+  referrer: ""
+  tracking_key: "tracking_key_test_a"
+registed:
+  mixi_inflow_master: blog
+  referrer: ""
+  tracking_key: "tracking_key_test_b"
+  app_name: "unshiu"
+  mixi_user_id: 1
+  registed_at: <%= Time.now.to_s :db %>
+unmaster:
+  mixi_inflow_master_id: 2
+  referrer: ""
+  tracking_key: "tracking_key_test_c"
+  app_name: "unshiu"
+  mixi_user_id: 2
+  registed_at: <%= Time.now.to_s :db %>
+last_month_default:
+  mixi_inflow_master_id: 2
+  referrer: ""
+  tracking_key: "tracking_key_test_d"
+  created_at: <%= Time.now.last_month.beginning_of_month.to_s :db %>
+last_month_registed:
+  mixi_inflow_master: blog
+  referrer: ""
+  tracking_key: "tracking_key_test_e"
+  app_name: "unshiu"
+  mixi_user_id: 1
+  created_at: <%= Time.now.last_month.beginning_of_month.to_s :db %>
+  registed_at: <%= Time.now.last_month.beginning_of_month.to_s :db %>

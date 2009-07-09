@@ -1,0 +1,14 @@
+<%= error_messages_for 'mixi_inflow_master' %>
+
+<table class="lineColorL" style="width:609px;">
+<tbody>
+  <tr>
+    <th style="width:140px;"><%= t('activerecord.attributes.mixi_inflow_master.route_name') %></th>
+    <td>
+		<%= h @mixi_inflow_master.route_name %>
+		<%= hidden_field 'mixi_inflow_master', 'route_name' %>
+	</td>
+  </tr>
+</tbody>
+</table>
+<%= hidden_field 'mixi_inflow_master', 'route_key' %>

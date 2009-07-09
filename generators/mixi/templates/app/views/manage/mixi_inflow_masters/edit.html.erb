@@ -1,0 +1,14 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2=t('view.noun.mixi_inflow_master') -%><%- @pan3="編集" -%>
+
+<% content_for(:header_title) do %>
+	<%= t('view.noun.mixi_inflow_master') %>編集
+<% end %>
+
+<h3><%= t('view.noun.mixi_inflow_master') %>編集</h3>
+
+<% form_for @mixi_inflow_master, :url => update_confirm_manage_mixi_inflow_master_path do %>
+  <%= render :partial => 'form' %>
+  <div class="bot_btn">
+  	<%= mng_submit_tag "確認" %>
+  </div>
+<% end %>
