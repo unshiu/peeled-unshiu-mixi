@@ -17,8 +17,6 @@ module MixiGadgetControllerTestModule
     post :index
     assert_response :success
     assert_template 'index'
-    
-    assert_not_nil(session[:valid])
   end
   
   define_method('test: コンテナから取得したユーザ情報と友達情報を登録する-初期登録の場合') do 

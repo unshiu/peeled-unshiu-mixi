@@ -28,17 +28,23 @@ module MixiGadgetControllerModule
     end
     viewer = MixiUser.create_or_update(viewer_data)
     
+    friends = []
     friends_data.each do |friend_data|
       user = MixiUser.create_or_update(friend_data)
       owner.mixi_friends << user unless owner.mixi_friends.member?(user)
+      friends << user
     end
     owner.save
     
     MixiLatestLogin.update_latest_login(viewer.id)
     
-    session[:owner] = MixiUser.find(owner.id)
-    session[:viewer] = MixiUser.find(viewer.id)
+    owner = MixiUser.find(owner.id) # 関連情報がsessionにはいらないように
+    viewer = MixiUser.find(viewer.id)
+    session[:owner] = owner
+    session[:viewer] = viewer
     session[:valid] = nil
+    
+    MiddleMan.worker(:mixi_user_regist_worker).mixi_user_regist(:arg => {:mixi_user => owner, :mixi_friends => friends})
     
     if params[:history]
       history = params[:history].split(/\//)

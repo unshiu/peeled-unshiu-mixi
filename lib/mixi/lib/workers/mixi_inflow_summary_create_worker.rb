@@ -6,7 +6,7 @@ module MixiInflowSummaryCreateWorkerModule
   class << self
     def included(base)
       base.class_eval do
-        set_worker_name :mixi_inflow_summary_create_worker_worker
+        set_worker_name :mixi_inflow_summary_create_worker
       end
     end
   end
