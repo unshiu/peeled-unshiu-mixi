@@ -1,5 +1,11 @@
 <![CDATA[
 
-	<img src="<%= "#{request.protocol}#{request.host}:#{request.port}" %>/images/app/icon_baton.jpg" />
-	
+	<%= javascript_include_tag("home.js") %>
+
+	<script type="text/javascript">
+	gadgets.util.registerOnLoadHandler(init);
+	</script>
+
+	<!-- The code for Preview view is here. -->
+	<div>Home view for MixiApp.</div>
 ]]>
