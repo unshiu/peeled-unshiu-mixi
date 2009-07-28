@@ -12,6 +12,7 @@ module MixiGadgetControllerModule
         protect_from_forgery :except => ["register", "index", "top", "timeout"]
         layout 'mixi_gadget'
         before_filter :validate_session, :only => [:top]
+        before_filter :token_require, :only => [:iframe]
       end
     end
   end
@@ -67,5 +68,22 @@ module MixiGadgetControllerModule
   def top
     # application overwrite
   end
+  
+  # iframeでアプリケーションを開いたときに表示するトップページ。アプリ開発者がoverwriteして利用する
+  def iframe
+  end
 
+private 
+  
+  def token_require
+    @mixi_token = MixiToken.find_by_token(params[:mixi_token])
+    if @mixi_token.nil? || @mixi_token.use_flag 
+      redirect_to_error("U-10000")
+    else
+      @mixi_token.use_flag = true
+      @mixi_token.save
+      true
+    end
+  end
+  
 end
