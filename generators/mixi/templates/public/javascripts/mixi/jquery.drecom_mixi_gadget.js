@@ -403,7 +403,7 @@
 		 */
 		klass.infollow_iframe = function() {
 			$.opensocial_simple.getPerson(function (result) {
-				var iframe = "<iframe src='" + config.base_url +"/mixi_ladder/conversion?app_name=" + config.app_name + "&mixi_user_id=" + result.VIEWER.getId() + "' name='sample' width='200' height='150'></iframe>"
+				var iframe = "<iframe src='" + config.base_url +"/mixi_inflows/show?app_name=" + config.app_name + "&mixi_user_id=" + result.VIEWER.getId() + "' name='inflow' width='0' height='0'></iframe>"
 				$("#infollow_iframe").html(iframe);
 			});
 		}
