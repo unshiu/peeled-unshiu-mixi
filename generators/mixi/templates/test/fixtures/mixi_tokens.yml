@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+secret_token:
+  token: secret_token
+  use_flag: false
+
+use_token:
+  token: use_token
+  use_flag: true

@@ -17,6 +17,8 @@
 				app_url: "",
 				owner_only: false,
 				app_name: "",
+				iframe_width: "400px",
+				iframe_height: "500px",
 				view_name: gadgets.views.getCurrentView().getName()
 			},config);
 		
@@ -84,6 +86,7 @@
 						}
 		      	klass.requestContainer('/mixi_gadget/register', params, gadgets.io.MethodType.POST);
 					});
+					klass.gadget_iframe();
 					klass.infollow_iframe();
 		    }
 		  });
@@ -405,6 +408,17 @@
 			$.opensocial_simple.getPerson(function (result) {
 				var iframe = "<iframe src='" + config.base_url +"/mixi_inflows/show?app_name=" + config.app_name + "&mixi_user_id=" + result.VIEWER.getId() + "' name='inflow' width='0' height='0'></iframe>"
 				$("#infollow_iframe").html(iframe);
+			});
+		}
+		
+		klass.gadget_iframe = function() {
+			$.opensocial_simple.ajaxSetup({AUTHORIZATION: gadgets.io.AuthorizationType.SIGNED});
+			$.opensocial_simple.get( config.base_url + "/mixi_gadget_iframe/remote_token", function (result) {
+				token = result;
+				$.opensocial_simple.getPerson(function (result) {
+					var iframe = "<iframe src='" + config.base_url +"/mixi_gadget_iframe/index?app_name=" + config.app_name + "&mixi_user_id=" + result.VIEWER.getId() + "&mixi_token=" + token + "' name='mixi_app_iframe' width='" + config.iframe_width + "' height='" + config.iframe_height + "'></iframe>"
+					$("#gadget_iframe").html(iframe);
+				});
 			});
 		}
 		

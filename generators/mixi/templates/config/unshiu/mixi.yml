@@ -6,11 +6,37 @@ common: &common
   active_day: 3 # active_day日以降にログイン履歴があるユーザをアクティブとする
     
   mixi_domain: platform001.mixi.jp
+  mixi_mobile_domain: ma002.mixi.jp
+  
+  app_id: your_app_id
+  consumer_key: your_app_consumer_key
+  consumer_secret: your_app_consumer_secret
+  
   portal_token_reqular: rpctoken
   
   default_inflow_next_url: http://social.drecom.co.jp/
   inflow_cookie_limit: 14
   inflow_cookie_domain: .mixiapp.drecom.jp
+  
+  endpoint: http://localhost:8080/social/rest
+  consumer_key: osde:/sample/gadget.xml
+  consumer_secret: 94b33788fc702a519f18b82e7cb7a8d6
+  
+  oauth_public_key: |
+    -----BEGIN CERTIFICATE-----
+    MIICDDCCAXWgAwIBAgIJAJ4W4bqTjEGSMA0GCSqGSIb3DQEBBQUAMA8xDTALBgNV
+    BAMTBG9zZGUwHhcNMDkwMTA3MDg1MTEwWhcNMTAwMTA3MDg1MTEwWjAPMQ0wCwYD
+    VQQDEwRvc2RlMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDAv7N2y4S1TWgL
+    1UlaqivxGKyskl5o5TLoZdli2AMHidjVzTJsGX1ydYWJmteicnVLTo//JrmkB19C
+    L+IYCOnxo6H5YdNAi+t7e3NRpMJF6YBCV+MXnP2dZx02SHAhO6z4i8P/EMcnNX6l
+    sX7cXeMnmYS+X7AG+AS6zVVdSKQwVwIDAQABo3AwbjAdBgNVHQ4EFgQUbONO5jjA
+    q8gC34J+iUfAnkZVelswPwYDVR0jBDgwNoAUbONO5jjAq8gC34J+iUfAnkZVeluh
+    E6QRMA8xDTALBgNVBAMTBG9zZGWCCQCeFuG6k4xBkjAMBgNVHRMEBTADAQH/MA0G
+    CSqGSIb3DQEBBQUAA4GBABzjqyU0s8Kn73dmiK1wh2OgoSGVcHKr8ELHg7pf4J9S
+    fkg+OFTYajJhS1lDi3uyMTM486oxi1QxUY7f/c/iDnq09eV914ZEhMhalhD+H9WC
+    WThZt1a1SCmWx1Ne2a5O6qeQPtFPSL/BEe6xFWE+0RHYWEK+JcDRhv5MDW0DrJjT
+    -----END CERTIFICATE-----
+  
   
 development:
   <<: *common
@@ -21,4 +47,10 @@ test:
 production:
   portal_token_reqular: ^st=
   <<: *common
-
+mixitest:
+  app_id: your_app_id
+  consumer_key: your_app_consumer_key
+  consumer_secret: your_app_consumer_secret
+  endpoint: http://api.mixi-platform.com/os/0.8
+  portal_token_reqular: ^st=
+  <<: *common

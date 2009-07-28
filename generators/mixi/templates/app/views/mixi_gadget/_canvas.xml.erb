@@ -16,9 +16,8 @@
 	
 	var base_url = '<%= "#{request.protocol}#{request.host}:#{request.port}" %>';
 	$('#gadget_container').drecom_mixi_gadget({base_url: base_url,
-											   app_name: '<%= AppResources[:init][:service_name] %>',
-											   app_url: '<%= AppResources[:baton][:mixi_application_run_url] %>',
 											   owner_only: true,
+											   app_name: '<%= AppResources[:init][:service_name] %>',
 	                                           view_name: 'canvas'});
 
 	document.write('<link rel="stylesheet" type="text/css" href="' + base_url + '/stylesheets/style.css">');
@@ -49,10 +48,6 @@
 				//console.log(arguments) 
 			});
 		}
-		var ua = $.browser;
- 		if(ua.msie){ // IE only
-			DD_belatedPNG.fix('.boxMiddle,.newFeed li a,li.right a');
-		}
 		
 		function pageload(hash) {
 			//alert("pageload: " + hash);
@@ -77,5 +72,6 @@
 	</script>
 	
 	<div id="gadget_container"></div>
+	<div id="gadget_iframe"></div>
 	<div id="infollow_iframe"></div>
 ]]>
