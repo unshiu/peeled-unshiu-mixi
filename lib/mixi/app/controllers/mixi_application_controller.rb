@@ -3,9 +3,9 @@
 # mixi plugin を利用する際全アプリケーション的に必要なModule
 #
 module MixiApplicationControllerModule
-  
+
 private
-  
+    
   def current_mixiapp_viewer
     session[:viewer] ? session[:viewer] : MixiUser.find_by_mixi_id(params[:viewer])
   end
@@ -25,11 +25,11 @@ private
       false
     end
   end
-   
+  
   def redirect_mixi_gadget_to(options = {}, response_status = {})
     options[:viewer] = current_mixiapp_viewer
     options[request.session_options[:key]] = request.session_options[:id]
     redirect_to(options, response_status)
   end
-   
+  
 end
