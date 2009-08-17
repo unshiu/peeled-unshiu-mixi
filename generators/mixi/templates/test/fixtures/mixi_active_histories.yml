@@ -1,5 +1,4 @@
 # == Schema Information
-# Schema version: 20090703073100
 #
 # Table name: mixi_active_histories
 #
@@ -9,7 +8,6 @@
 #  deleted_at  :datetime
 #  created_at  :datetime
 #  updated_at  :datetime
-#  before_days :integer(4)
 #
 
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html

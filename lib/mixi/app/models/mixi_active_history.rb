@@ -8,7 +8,6 @@
 #  deleted_at  :datetime
 #  created_at  :datetime
 #  updated_at  :datetime
-#  before_days :integer(4)
 #
 
 module MixiActiveHistoryModule

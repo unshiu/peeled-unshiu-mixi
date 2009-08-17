@@ -8,6 +8,7 @@
 #  deleted_at      :datetime
 #  created_at      :datetime
 #  updated_at      :datetime
+#  invite_status   :integer(4)
 #
 
 #==MixiAppInviteModule
