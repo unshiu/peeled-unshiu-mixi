@@ -24,6 +24,8 @@ module MixiActiveHistoryCreateWorkerTestModule
     history = MixiActiveHistory.find(:first, :conditions => ['before_days = 1'])
     assert_not_nil(history)
     assert_not_nil(history.user_count)
+    
+    # TODO 本来は実際のアクティブユーザ数をカウントしチェックする必要があるがTokyoTyrantのデータであるためテストで再現ができないためとりあえずここまで
   end
   
   define_method('test: update_last_3days_active_count は過去3日以内にログインしたアクティブユーザ数を計算し、履歴テーブルを更新する') do 

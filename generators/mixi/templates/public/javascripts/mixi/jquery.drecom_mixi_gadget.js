@@ -422,6 +422,26 @@
 			});
 		}
 		
+		/**
+		 *　ユーザ招待をする画面をポップアップで表示
+		 */
+		klass.invite = function() {
+			$.opensocial_simple.getPerson(function (result) {
+				opensocial.requestShareApp("VIEWER_FRIENDS", null, function(response) {
+					// 現時点で成功しても　hadError()　がかえるのでそこが解消するまで一旦サスペンド
+				 　// if (response.hadError()) { 
+				  //  	updateContainerError();
+				  // } else {
+					// }
+					var params = {
+						"drecom_mixiapp_inviteId": result.VIEWER.getId(),
+	        	"drecom_mixiapp_recipientIds" : gadgets.json.stringify(response.getData()["recipientIds"])
+	      	};
+					requestServer('/mixi_gadget/invite_register', params, function() {}, gadgets.io.MethodType.POST);
+				});
+			});
+		}
+		
 		$[name_space] = klass;
 		$[name_space.replace(/_([a-z])/g, function () { return arguments[1].toUpperCase() })] = klass;
 		

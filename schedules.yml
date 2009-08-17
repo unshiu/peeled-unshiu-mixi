@@ -12,3 +12,10 @@
       :trigger_args: 0 0 0 * * * *
     :update_month:
       :trigger_args: 0 0 0 1 * * *
+  :mixi_app_invite_summary_create_worker:
+    :update_yesterday:
+      :trigger_args: 0 0 0 * * * *
+    :update_laset_week:
+      :trigger_args: 0 0 0 * * 1 *
+    :update_month:
+      :trigger_args: 0 0 0 1 * * *

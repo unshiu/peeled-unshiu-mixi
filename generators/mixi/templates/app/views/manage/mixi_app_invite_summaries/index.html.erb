@@ -1,0 +1,75 @@
+<%- @pan1='mixiアプリ' -%><%- @pan2="招待統計" -%>
+
+<% content_for(:header_title) do %>
+	招待統計
+<% end %>
+
+<h3>招待統計</h3>
+
+<% form_for :mixi_app_invite_summary_search, :url => { :action => :search } do |f| %>
+	<table class="lineColorL" style="width:609px;">
+		<tr>
+			<th><%= t('activerecord.attributes.mixi_app_invite_summary.start_at') %></th>
+			<td>
+				<%= f.date_select 'start_at', :use_month_numbers => true, :default => Date.today - 7.days %>
+				<%= adjusted_datetime 'mixi_app_invite_summary_search', 'start_at' %>
+			</td>
+		</tr>
+		<tr>
+			<th><%= t('activerecord.attributes.mixi_app_invite_summary.end_at') %></th>
+			<td>
+				<%= f.date_select 'end_at', :use_month_numbers => true, :default => Time.now %>
+				<%= adjusted_datetime 'mixi_app_invite_summary_search', 'end_at' %>
+			</td>
+		</tr>
+		<tr>
+			<th></th>
+			<td>
+				<%= f.radio_button "type", "day", {"checked" => "checked"} %>日別
+				<%= f.radio_button "type", "week" %>週別
+				<%= f.radio_button "type", "month" %>月別
+			</td>
+		</tr>
+	</table>
+	<div class="bot_btn">
+		<%= mng_submit_tag '検索' %>
+	</div>
+<% end %>
+
+<br/>
+<br/>
+
+<% if @mixi_app_invite_summaries.size.zero? %>
+	<%= t('view.noun.mixi_app_invite_summary') %>がありません。
+	
+<% else %>
+	<%= paginate_header(@mixi_app_invite_summaries) %>
+	<table class="lineColorT" style="width:609px;">
+	<tr>
+		<th width="309px">
+			<%= t('activerecord.attributes.mixi_app_invite_summary.start_at') %>〜<%= t('activerecord.attributes.mixi_app_invite_summary.end_at') %>
+		</th>
+		<th width="150px">
+			<%= t('activerecord.attributes.mixi_app_invite_summary.registed_mixi_user_count') %>
+		</th>
+		<th width="150px">
+			<%= t('activerecord.attributes.mixi_app_invite_summary.broadening_coefficient') %>
+		</th>
+	</tr>
+	<% for mixi_app_invite_summary in @mixi_app_invite_summaries %>
+	<tr>
+		<td>
+			<%= "#{l(mixi_app_invite_summary.start_at)}〜#{l(mixi_app_invite_summary.end_at)}" %>
+		</td>
+		<td class="textalignR">
+			<%=h mixi_app_invite_summary.registed_mixi_user_count %>
+		</td>
+		<td class="textalignR">
+			<%=h mixi_app_invite_summary.broadening_coefficient %>
+		</td>
+	</tr>
+	<% end %>
+	</table>
+	<%= paginate_links(@mixi_app_invite_summaries) %>
+<% end %>
+

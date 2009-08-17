@@ -40,7 +40,41 @@ namespace :unshiu do
           end
         end
       end
+      
+      desc 'create mixi app invite summaries test data generate.'
+      task :create_mixi_app_invite_summaries => [:environment] do
+        
+        start = Date.today - 1.years
+        for date in start..Date.today
+          MixiAppInviteSummary.create({:summary_type => MixiAppInviteSummary::SUMMARY_DAY, 
+                                       :start_at => Time.mktime(date.year, date.month, date.day, 0, 0, 0), 
+                                       :end_at => Time.mktime(date.year, date.month, date.day, 23, 59, 59), 
+                                       :registed_mixi_user_count => rand(10000), :broadening_coefficient => rand(10000)/10000.to_f})
+        end
+        
+        date = Date.today - 1.years
+        while date < Date.today
+          start_at = date.beginning_of_week
+          end_at = date.end_of_week
+          MixiAppInviteSummary.create({:summary_type => MixiAppInviteSummary::SUMMARY_WEEK, 
+                                       :start_at => Time.mktime(start_at.year, start_at.month, start_at.day, 0, 0, 0), 
+                                       :end_at => Time.mktime(end_at.year, end_at.month, end_at.day, 23, 59, 59), 
+                                       :registed_mixi_user_count => rand(10000), :broadening_coefficient => rand(10000)/10000.to_f})
+          date = date.end_of_week.tomorrow
+        end
+        
+        date = Date.today - 1.years
+        while date < Date.today
+          start_at = date.beginning_of_month
+          end_at = date.end_of_month
+          MixiAppInviteSummary.create({:summary_type => MixiAppInviteSummary::SUMMARY_MONTH, 
+                                       :start_at => Time.mktime(start_at.year, start_at.month, start_at.day, 0, 0, 0), 
+                                       :end_at => Time.mktime(end_at.year, end_at.month, end_at.day, 23, 59, 59), 
+                                       :registed_mixi_user_count => rand(10000), :broadening_coefficient => rand(10000)/10000.to_f})
+          date = date.end_of_month.tomorrow
+        end
+      end
+      
     end
-  
   end
 end

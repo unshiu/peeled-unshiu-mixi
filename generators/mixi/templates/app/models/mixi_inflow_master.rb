@@ -1,5 +1,4 @@
 # == Schema Information
-# Schema version: 20090703073100
 #
 # Table name: mixi_inflow_masters
 #

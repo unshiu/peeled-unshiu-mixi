@@ -109,4 +109,17 @@ module MixiGadgetControllerTestModule
     assert_nil(mixi_user.joined_at) # 今回はじめて登録された＝アプリを利用していない
   end
   
+  define_method('test: invite_register はコンテナから取得したユーザ招待情報と友達情報を登録する') do 
+    invite_users = [ "101", "102" ].to_json
+    
+    assert_difference "MixiAppInvite.count(:conditions => ['mixi_user_id = 100'])", 2 do # 2名招待している
+      post :invite_register, :drecom_mixiapp_inviteId => 100, :drecom_mixiapp_recipientIds => invite_users
+      assert_response :success
+    end
+    
+    invites = MixiAppInvite.find(:all, :conditions => ['mixi_user_id = 100'])
+    invites.each do |invite|
+      assert_equal(invite.invite_status, 1) # ステータスは招待していて、まだインストールされてない = 1
+    end
+  end
 end

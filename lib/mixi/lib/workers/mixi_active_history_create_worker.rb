@@ -24,14 +24,14 @@ module MixiActiveHistoryCreateWorkerModule
   
   # 過去3日以内ログインした履歴のあるアクティブユーザ数計測をする
   def update_last_3days_active_count
-    start_at = Time.now.ago(3).beginning_of_day
+    start_at = Time.now.ago(3.days).beginning_of_day
     end_at = Time.now
     update_active_count_by_day(3, start_at, end_at)
   end
   
   # 先週の最終ログイン日以降のアクティブユーザ数計測をする
   def update_last_week_active_count
-    start_at = Time.now.ago(7).beginning_of_day
+    start_at = Time.now.ago(7.days).beginning_of_day
     end_at = Time.now
     update_active_count_by_day(7, start_at, end_at)
   end

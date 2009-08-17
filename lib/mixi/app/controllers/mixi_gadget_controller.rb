@@ -9,7 +9,7 @@ module MixiGadgetControllerModule
   class << self
     def included(base)
       base.class_eval do
-        protect_from_forgery :except => ["register", "index", "top", "timeout"]
+        protect_from_forgery :except => ["register", "invite_register", "index", "top", "timeout"]
         layout 'mixi_gadget'
         before_filter :validate_session, :only => [:top]
       end
@@ -52,6 +52,20 @@ module MixiGadgetControllerModule
     else
       redirect_mixi_gadget_to :controller => "mixi_gadget", :action => "top"
     end
+  end
+  
+  def invite_register
+    mixi_user_id = params[:drecom_mixiapp_inviteId]
+    invite_data = JSON.parse(params['drecom_mixiapp_recipientIds'])
+    
+    invite_data.each do |invitee_user_id|
+      MixiAppInvite.invited_create(:mixi_user_id => mixi_user_id, :invitee_user_id => invitee_user_id)
+    end
+    
+    render :text => "OK"
+  rescue => e
+    logger.error "mixi inviate registe error \n #{e}"
+    render :text => "NG"
   end
   
   def timeout
