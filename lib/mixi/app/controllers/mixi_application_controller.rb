@@ -27,7 +27,7 @@ private
   end
   
   def redirect_mixi_gadget_to(options = {}, response_status = {})
-    options[:viewer] = current_mixiapp_viewer
+    options[:viewer] = current_mixiapp_viewer.mixi_id
     options[request.session_options[:key]] = request.session_options[:id]
     redirect_to(options, response_status)
   end
