@@ -44,10 +44,16 @@ module MixiUserModule
   
   module ClassMethods
     
+    # アプリユーザを作成する。
+    # ただしixi公認ユーザであり、アプリの利用が許可されていないユーザの場合、idのみでそれ以外の情報が空で渡されるのでユーザ作成しない
+    # ユーザを作成された場合はそのオブジェクトがかえり、作成されなかった場合はnilがかえる。
+    # _param1_:: data 
+    # return:: mixi_user　
     def create_or_update(data)
+      return nil if data["nickname"].blank?
       user = self.find_or_create_by_mixi_id(data["mixi_id"])
       user.status = MixiUser::STATUS_ACTIVE
-      user.update_attributes(data)
+      user.update_attributes(data) 
       user
     end
 
@@ -68,6 +74,12 @@ module MixiUserModule
       avg = 0
       results.each { |result| avg = result.avg }
       avg.to_f
+    end
+    
+    # アプリを利用できるかどうか判別する。
+    # mixi公認ユーザであり、アプリの利用が許可されていないユーザの場合、idのみでそれ以外の情報が空
+    def app_use_allow?
+      self.nickname.blank? ? false : true
     end
     
   end

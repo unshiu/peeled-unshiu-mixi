@@ -31,8 +31,7 @@ module MixiGadgetControllerModule
     friends = []
     friends_data.each do |friend_data|
       user = MixiUser.create_or_update(friend_data)
-      owner.mixi_friends << user unless owner.mixi_friends.member?(user)
-      friends << user
+      owner.mixi_friends << user if !user.nil? && !owner.mixi_friends.member?(user)
     end
     owner.save
     

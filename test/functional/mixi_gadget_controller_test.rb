@@ -109,8 +109,40 @@ module MixiGadgetControllerTestModule
     assert_nil(mixi_user.joined_at) # 今回はじめて登録された＝アプリを利用していない
   end
   
-  define_method('test: invite_register はコンテナから取得したユーザ招待情報と友達情報を登録する') do 
-    invite_users = [ "101", "102" ].to_json
+  define_method('test: コンテナから取得したユーザ情報と友達情報を登録する-公認ユーザがまぎれている場合') do 
+    session[:valid] = true
+    
+    owner = { "mixi_id" => 1, "nickname" => "jane", 
+                              "profile_url" => "http://unshiu.drecom.jp/profile/1",
+                              "thumbnail_url" => "http://unshiu.drecom.jp/profile/1/profile.gif" }.to_json
+    friends = [ { "mixi_id" => 2, "nickname" => "doe", 
+                                  "profile_url" => "http://unshiu.drecom.jp/profile/2",
+                                  "thumbnail_url" => "http://unshiu.drecom.jp/profile/2/profile.gif" },
+                { "mixi_id" => 999, "nickname" => "", 
+                                    "profile_url" => "",
+                                    "thumbnail_url" => "" } ].to_json
+    
+    post :register, :owner => owner, :friends => friends
+    assert_response :redirect
+    assert_redirected_to :action => 'top'
+    
+    mixi_user = MixiUser.find_by_mixi_id(1)
+    assert_equal(mixi_user.nickname, "jane")
+    assert_equal(mixi_user.profile_url, "http://unshiu.drecom.jp/profile/1")
+    assert_equal(mixi_user.thumbnail_url, "http://unshiu.drecom.jp/profile/1/profile.gif")
+    assert_not_nil(mixi_user.joined_at) # アプリ利用者なのでアプリを利用している
+    
+    mixi_user = MixiUser.find_by_mixi_id(2)
+    assert_equal(mixi_user.nickname, "doe")
+    assert_equal(mixi_user.profile_url, "http://unshiu.drecom.jp/profile/2")
+    assert_equal(mixi_user.thumbnail_url, "http://unshiu.drecom.jp/profile/2/profile.gif")
+    
+    mixi_user = MixiUser.find_by_mixi_id(999)
+    assert_nil(mixi_user) # 公認ユーザではは登録しない
+  end
+  
+  define_method('test: 有効なセッションではないのでtimout画面を表示する') do 
+    session[:valid] = false
     
     assert_difference "MixiAppInvite.count(:conditions => ['mixi_user_id = 100'])", 2 do # 2名招待している
       post :invite_register, :drecom_mixiapp_inviteId => 100, :drecom_mixiapp_recipientIds => invite_users

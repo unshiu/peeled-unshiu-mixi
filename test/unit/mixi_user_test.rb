@@ -12,7 +12,7 @@ module MixiUserTestModule
     end
   end
   
-  define_method('test: mixi友達関連を取得する') do 
+  define_method('test: mixi_friends はmixi友達関連を取得する') do 
     mixi_user = MixiUser.find(1)
     assert_not_nil(mixi_user)
     assert_not_nil(mixi_user.mixi_friends)
@@ -43,7 +43,7 @@ module MixiUserTestModule
     end
   end
   
-  define_method('test: mixiユーザを作成する') do 
+  define_method('test: create_or_update はmixiユーザを作成する') do 
     mixi_user = MixiUser.create_or_update({"mixi_id" => "test_mixi_id", "nickname" => "nickname", 
                                            "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})
     assert_not_nil(mixi_user)
@@ -51,7 +51,7 @@ module MixiUserTestModule
     assert_equal(mixi_user.status, 1) # 有効
   end
   
-  define_method('test: mixiユーザを更新する') do 
+  define_method('test: create_or_update はmixiユーザを更新する') do 
     mixi_user = MixiUser.create_or_update({"mixi_id" => "test_mixi_id", "nickname" => "nickname", 
                                            "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})
     assert_not_nil(mixi_user)
@@ -70,6 +70,15 @@ module MixiUserTestModule
     assert_equal(user_count, MixiUser.count) # 更新されているのでユーザは増えていない
   end
   
+  define_method('test: create_or_update は名前が空であったらmixiユーザを作成をしない') do 
+    mixi_user = MixiUser.create_or_update({"mixi_id" => "empty_test_mixi_id", "nickname" => "", 
+                                           "profile_url" => "", "thumbnail_url" => ""})
+    assert_nil(mixi_user) # 作成されないのでnilがかえる
+    
+    mixi_user = MixiUser.find_by_mixi_id("empty_test_mixi_id")
+    assert_nil(mixi_user)
+  end
+  
   define_method('test: mixiユーザの友達関連を保持できる') do 
     my_mixi_user = MixiUser.create_or_update({"mixi_id" => "test_my_mixi_id", "nickname" => "nickname", 
                                               "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})
@@ -84,4 +93,5 @@ module MixiUserTestModule
     assert_equal(mixi_friend.mixi_user_id, my_mixi_user.id)
     assert_equal(mixi_friend.friend_id, friend_mixi_user.id)
   end
+  
 end
