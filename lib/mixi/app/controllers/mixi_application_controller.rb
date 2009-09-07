@@ -5,13 +5,15 @@
 module MixiApplicationControllerModule
 
 private
-    
+  
+  # 現在そのアプリを閲覧しているユーザを返す
   def current_mixiapp_viewer
-    session[:viewer] ? session[:viewer] : MixiUser.find_by_mixi_id(params[:viewer])
+    session[:opensocial_viewer] ? session[:opensocial_viewer] : MixiUser.find_by_mixi_id(params[:opensocial_viewer_id])
   end
   
-  def current_mixiapp_onwer
-    session[:owner] ? session[:owner] : MixiUser.find_by_mixi_id(params[:owner])
+  # 現在そのアプリのガジェットを所有しているユーザを返す
+  def current_mixiapp_owner
+    session[:opensocial_owner] ? session[:opensocial_owner] : MixiUser.find_by_mixi_id(params[:opensocial_owner_id])
   end
   
   def validate_session
@@ -27,7 +29,7 @@ private
   end
   
   def redirect_mixi_gadget_to(options = {}, response_status = {})
-    options[:viewer] = current_mixiapp_viewer.mixi_id
+    options[:opensocial_viewer_id] = current_mixiapp_viewer.mixi_id
     options[request.session_options[:key]] = request.session_options[:id]
     redirect_to(options, response_status)
   end
