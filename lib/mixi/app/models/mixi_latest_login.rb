@@ -10,6 +10,7 @@ module MixiLatestLoginModule
         if AppResources[:init][:tokyotyrant_on]
           server_config Rails.env, "config/miyazakiresistance.yml"
           set_timeout AppResources[:init][:tokyotyrant_timeout]
+          set_column :app_name,     :string
           set_column :mixi_user_id, :integer
           set_column :latest_login, :datetime
         end
