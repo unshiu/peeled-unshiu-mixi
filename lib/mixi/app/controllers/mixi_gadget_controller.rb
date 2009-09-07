@@ -39,8 +39,8 @@ module MixiGadgetControllerModule
     
     owner = MixiUser.find(owner.id) # 関連情報がsessionにはいらないように
     viewer = MixiUser.find(viewer.id)
-    session[:owner] = owner
-    session[:viewer] = viewer
+    session[:opensocial_owner] = owner
+    session[:opensocial_viewer] = viewer
     session[:valid] = nil
     session[:base_user] = viewer.base_user # point処理のため
     
