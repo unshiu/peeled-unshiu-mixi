@@ -94,4 +94,10 @@ module MixiUserTestModule
     assert_equal(mixi_friend.friend_id, friend_mixi_user.id)
   end
   
+  define_method('test: mixiユーザを作成するとbase_userも自動的に作成される') do 
+    mixi_user = MixiUser.create_or_update({"mixi_id" => "test_my_mixi_id", "nickname" => "nickname", 
+                                           "profile_url" => "http://hoge", "thumbnail_url" => "http://hoge"})
+    assert_not_nil(mixi_user.base_user)
+    assert_equal(mixi_user.base_user.status, 2) # 有効なユーザステータス
+  end
 end

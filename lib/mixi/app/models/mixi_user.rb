@@ -30,6 +30,8 @@ module MixiUserModule
         has_many :mixi_friend_ships, :foreign_key => 'mixi_user_id', :class_name => 'MixiFriend'
         has_many :mixi_friends, :through => :mixi_friend_ships, :source => :mixi_friend_shipped
         
+        belongs_to :base_user
+        
         # -------------------------------------
         # constants
         # -------------------------------------
@@ -38,6 +40,7 @@ module MixiUserModule
         const_set('STATUS_WITHDRAWAL',        2) # 自分で退会したユーザ
         const_set('STATUS_FORCED_WITHDRAWAL', 3) # 管理者により退会されたユーザ
         
+        after_create :association_with_base_user
       end
     end
   end
@@ -83,4 +86,15 @@ module MixiUserModule
     end
     
   end
+
+private
+
+  # 他のplugin関連を扱えるようにbase_userとの関連付けを行う
+  def association_with_base_user
+    base_user = BaseUser.create({:login => "mixi:#{self.mixi_id}", :email => "#{self.id}@dummy.unshiu.jp"})
+    base_user.activate(Util.random_string(8), false)
+    self.base_user_id = base_user.id
+    self.save
+  end
+  
 end
