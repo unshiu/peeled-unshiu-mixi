@@ -79,7 +79,7 @@
 							return false;
 						}
 					}
-				
+					
 					$.opensocial_simple.getViewerData(function (data) { 
 						if(data["drecom_mixiapp_history"] != null) {
 							params['history'] = data["drecom_mixiapp_history"];

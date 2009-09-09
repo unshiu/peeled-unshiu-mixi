@@ -45,3 +45,5 @@ ja-JP:
         mixi_inflow_master_create: "媒体マスタを作成しました。"
         mixi_inflow_master_update: "媒体マスタを更新しました。"
         mixi_inflow_master_destroy: "媒体マスタを削除しました。"
+    message:
+      poncan_history: "広告ポイント：{{rid}}"
