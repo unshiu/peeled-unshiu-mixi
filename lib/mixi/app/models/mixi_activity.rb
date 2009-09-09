@@ -33,4 +33,7 @@ module MixiActivityModule
   module ClassMethods
   end
   
+  def to_json
+    %({"title":"#{self.title}"})
+  end
 end
