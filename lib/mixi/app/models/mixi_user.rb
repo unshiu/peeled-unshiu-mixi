@@ -27,8 +27,8 @@ module MixiUserModule
       base.class_eval do
         acts_as_paranoid
         
-        has_many :mixi_friend_ships, :foreign_key => 'mixi_user_id', :class_name => 'MixiFriend'
-        has_many :mixi_friends, :through => :mixi_friend_ships, :source => :mixi_friend_shipped
+        has_many :mixi_friendships, :foreign_key => 'mixi_user_id', :class_name => 'MixiFriend'
+        has_many :mixi_friends, :through => :mixi_friendships, :source => :friend_user
         
         belongs_to :base_user
         
