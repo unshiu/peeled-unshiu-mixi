@@ -8,7 +8,7 @@ module MixiGadgetIframeControllerModule
         layout 'mixi_gadget'
         
         before_filter :signature_require, :only => [:remote_token]
-        before_filter :token_require, :only => [:iframe]
+        before_filter :token_require, :only => [:index]
       end
     end
   end
