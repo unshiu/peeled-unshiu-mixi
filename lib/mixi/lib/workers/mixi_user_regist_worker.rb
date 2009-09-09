@@ -30,11 +30,11 @@ module MixiUserRegistWorkerModule
     
     friend_ids = mixi_user_friends.collect { |mixi_user_friend| mixi_user_friend.id }
     mixi_user = MixiUser.find(mixi_user.id)
-    mixi_friend_ships = mixi_user.mixi_friend_ships
-    mixi_friend_ships = mixi_friend_ships.delete_if { |mixi_friend_ship| friend_ids.member?(mixi_friend_ship.friend_id) }
+    mixi_friendships = mixi_user.mixi_friendships
+    mixi_friendships = mixi_friendships.delete_if { |mixi_friendship| friend_ids.member?(mixi_friendship.friend_id) }
     
-    mixi_friend_ships.each do |mixi_friend_ship|
-      mixi_friend_ship.destroy! 
+    mixi_friendships.each do |mixi_friendship|
+      mixi_friendship.destroy! 
     end
   end
   

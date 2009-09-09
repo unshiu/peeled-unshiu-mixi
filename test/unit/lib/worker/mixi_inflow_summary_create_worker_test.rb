@@ -55,7 +55,7 @@ module MixiInflowSummaryCreateWorkerTestModule
     end
     
     inflow_master = mixi_inflow_masters(:blog)
-    summary = MixiInflowSummary.find(:first, :conditions => ['summary_type = ? and mixi_inflow_master_id = ?', "SUMMARY_MONTH".hash, inflow_master.id])
+    summary = MixiInflowSummary.find(:first, :conditions => ['summary_type = ? and mixi_inflow_master_id = ?', MixiInflowSummary::SUMMARY_MONTH, inflow_master.id])
     assert_not_nil(summary)
     
     inflow_count = MixiInflow.count(:conditions => ['mixi_inflow_master_id = ? and created_at >= ? and created_at <= ?', 
@@ -66,7 +66,7 @@ module MixiInflowSummaryCreateWorkerTestModule
     assert_equal(summary.registed_mixi_user_count, registed_count)
     
     # その月のトータル
-    summary = MixiInflowSummary.find(:first, :conditions => ['summary_type = ? and mixi_inflow_master_id = ?', "SUMMARY_MONTH".hash, MixiInflowMaster::TOTAL])
+    summary = MixiInflowSummary.find(:first, :conditions => ['summary_type = ? and mixi_inflow_master_id = ?', MixiInflowSummary::SUMMARY_MONTH, MixiInflowMaster::TOTAL])
     assert_not_nil(summary)
     
     inflow_count = MixiInflow.count(:conditions => ['created_at >= ? and created_at <= ?', Time.now.last_month.beginning_of_month, Time.now.last_month.end_of_month])
