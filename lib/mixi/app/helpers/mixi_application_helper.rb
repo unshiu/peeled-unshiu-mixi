@@ -138,6 +138,63 @@ module MixiApplicationHelperModule
     "#{JQUERY_VAR}.opensocial_simple.postActivity({'TITLE' : '#{options[:title]}', 'BODY' : '#{options[:body]}'}, '#{options[:priority]}' , function () { /* console.log(arguments) */ } /* optional */);"
   end
   
+  # モバイルアプリ用のリンクタグを出力する
+  # _param1_:: name
+  # _param2_:: options
+  # _param3_:: html_options
+  def mobile_gadget_link_to(name, options = {}, html_options = nil)
+    if development?
+      options[:opensocial_owner_id] ||= params[:opensocial_owner_id]
+      link_to(name, options, html_options)
+    else
+      link_to(name, mobile_gadget_url_for(options), html_options)
+    end
+  end
+  
+  # モバイルアプリ用のフォームタグを出力する
+  # _param1_:: record_or_name_or_array
+  # _param2_:: *args
+  # _param3_:: &proc
+  #
+  # options:
+  # * <tt>:url</tt> - 必須。POST先のURL
+  def mobile_gadget_form_for(record_or_name_or_array, *args, &proc)
+    options = args.extract_options!
+    if development?
+      options[:url][:opensocial_owner_id] ||= params[:opensocial_owner_id]
+    else
+      options[:url] = mobile_gadget_url_for(options[:url])
+    end
+    form_for(record_or_name_or_array, *(args << options), &proc)
+  end
+  
+  # モバイルアプリ用のフォームタグを出力する
+  # _param1_:: url_for_options
+  # _param2_:: options
+  # _param3_:: *args
+  # _param4_:: &proc
+  def mobile_gadget_form_tag(url_for_options = {}, options = {}, *args, &proc)
+    if development?
+      url_for_options[:opensocial_owner_id] ||= params[:opensocial_owner_id]
+      form_tag(url_for_options, options, *args, &proc)
+    else
+      form_tag(mobile_gadget_url_for(url_for_options), options, *args, &proc)
+    end
+  end
+  
+  # モバイルアプリ用のURLを返す
+  # _param1_:: options
+  #
+  # options:
+  # * <tt>:escape</tt> - 指定は無視されて必ずfalseになる
+  def mobile_gadget_url_for(options)
+    options[:escape] = false
+    url = "http://#{AppResources[:mixi][:mixi_mobile_domain]}/#{AppResources[:mixi][:app_id]}/?url="
+    url << CGI.escape("http://" + AppResources[:init][:application_domain] + url_for(options))
+    url << "&guid=ON" if request.mobile.instance_of?(Jpmobile::Mobile::Docomo)
+    url
+  end
+  
 private
 
   def request_function(options, function_name)
@@ -183,4 +240,7 @@ private
     link_to_function(name, "#{JQUERY_VAR}.drecom_mixi_gadget.requestNavigateTo('#{view_name}', '#{options[:url]}')", html_options || options.delete(:html))
   end
   
+  def development?
+    RAILS_ENV == 'development'
+  end
 end
