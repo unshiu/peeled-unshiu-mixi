@@ -1,7 +1,7 @@
 class MixiGadgetAssertionsController < MixiApplicationController
   
   def redirect_to_path
-    session[:viewer] = MixiUser.find(1) # 実際にはfilterで追加されている
+    session[:opensocial_viewer] = MixiUser.find(1) # 実際にはfilterで追加されている
     redirect_mixi_gadget_to :action => 'index'
   end
 end
@@ -22,11 +22,11 @@ module MixiGadgetAssertionsControllerTestModule
   
   define_method('test: redirect_mixi_gadget_to はgadget用のリダイレクト処理をする') do
     mixiapp_viewer = MixiUser.find(1)
-      
+    
     post :redirect_to_path
     assert_response :redirect
     
     # session_id と　viewer情報が自動的に付加される
-    assert_redirected_to :action => 'index', :viewer => mixiapp_viewer.id, AppResources[:init][:session_key] => "test_session"
+    assert_redirected_to :action => 'index', :opensocial_viewer_id => mixiapp_viewer.id, AppResources[:init][:session_key] => "test_session"
   end
 end

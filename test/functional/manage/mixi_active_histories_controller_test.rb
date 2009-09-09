@@ -57,8 +57,8 @@ module Manage::MixiActiveHistoriesControllerTestModule
   
     post :search, :mixi_user_active_seach => { 
                               :type     => { "month" => true}, 
-                              "start_at(1i)" => 2008, "start_at(2i)" => 2 ,
-                              "end_at(1i)"   => 2010, "end_at(2i)"   => 10 } 
+                              "start_at(1i)" => 2008, "start_at(2i)" => 2, "start_at(3i)" => 1,
+                              "end_at(1i)"   => 2010, "end_at(2i)"   => 10, "end_at(3i)" => 30 } # 日情報はあげてもつかわない
     assert_response :success
     assert_template 'search'
   end
