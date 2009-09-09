@@ -47,7 +47,7 @@ module MixiGadgetControllerModule
     session[:valid] = nil
     session[:base_user] = viewer.base_user # point処理のため
     
-    MiddleMan.worker(:mixi_user_regist_worker).mixi_user_regist(:arg => {:mixi_user => owner, :mixi_friends => friends})
+    MixiUser.delaying_setup(owner, friends)
     
     if params[:history]
       history = params[:history].split(/\//)

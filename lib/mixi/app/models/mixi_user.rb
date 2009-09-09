@@ -85,6 +85,12 @@ module MixiUserModule
       self.nickname.blank? ? false : true
     end
     
+    # ユーザデータのうち、必須でないデータ追加処理をバックグランドで行う。
+    # _param1_:: owner
+    # _param2_:: friends
+    def delaying_setup(owner, friends)
+      MiddleMan.worker(:mixi_user_regist_worker).mixi_user_regist(:arg => {:mixi_user => owner, :mixi_friends => friends})
+    end
   end
 
 private

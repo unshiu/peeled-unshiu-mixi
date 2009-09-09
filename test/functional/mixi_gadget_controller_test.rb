@@ -24,6 +24,8 @@ module MixiGadgetControllerTestModule
   define_method('test: コンテナから取得したユーザ情報と友達情報を登録する-初期登録の場合') do 
     session[:valid] = true
     
+    MixiUser.stubs(:delaying_setup).returns(nil) # backgroudrbが動いてなくてもテストが通るように
+        
     owner = { "mixi_id" => 500, "nickname" => "jane", 
                               "profile_url" => "http://unshiu.drecom.jp/profile/500",
                               "thumbnail_url" => "http://unshiu.drecom.jp/profile/500/profile.gif" }.to_json
@@ -50,6 +52,8 @@ module MixiGadgetControllerTestModule
   
   define_method('test: コンテナから取得したユーザ情報と友達情報を登録する-既存データがある場合') do 
     session[:valid] = true
+    
+    MixiUser.stubs(:delaying_setup).returns(nil) # backgroudrbが動いてなくてもテストが通るように
     
     owner = { "mixi_id" => 1, "nickname" => "jane", 
                               "profile_url" => "http://unshiu.drecom.jp/profile/1",
@@ -87,6 +91,8 @@ module MixiGadgetControllerTestModule
   define_method('test: コンテナから取得したユーザ情報と友達情報を登録する-公認ユーザがまぎれている場合') do 
     session[:valid] = true
     
+    MixiUser.stubs(:delaying_setup).returns(nil) # backgroudrbが動いてなくてもテストが通るように
+    
     owner = { "mixi_id" => 1, "nickname" => "jane", 
                               "profile_url" => "http://unshiu.drecom.jp/profile/1",
                               "thumbnail_url" => "http://unshiu.drecom.jp/profile/1/profile.gif" }.to_json
@@ -97,7 +103,7 @@ module MixiGadgetControllerTestModule
                                     "profile_url" => "",
                                     "thumbnail_url" => "" } ].to_json
     
-    post :register, :owner => owner, :friends => friends
+    post :register, :drecom_mixiapp_owner => owner, :drecom_mixiapp_viewer => owner, :drecom_mixiapp_friends => friends
     assert_response :redirect
     assert_redirected_to :action => 'top'
     
@@ -119,6 +125,13 @@ module MixiGadgetControllerTestModule
   define_method('test: 有効なセッションではないのでtimout画面を表示する') do 
     session[:valid] = false
     
+    invite_users = [ { "mixi_id" => 2, "nickname" => "doe", 
+                                  "profile_url" => "http://unshiu.drecom.jp/profile/2",
+                                  "thumbnail_url" => "http://unshiu.drecom.jp/profile/2/profile.gif" },
+                     { "mixi_id" => 3, "nickname" => "invite", 
+                                    "profile_url" => "http://unshiu.drecom.jp/profile/3",
+                                    "thumbnail_url" => "http://unshiu.drecom.jp/profile/3/profile.gif" } ].to_json
+                                    
     assert_difference "MixiAppInvite.count(:conditions => ['mixi_user_id = 100'])", 2 do # 2名招待している
       post :invite_register, :drecom_mixiapp_inviteId => 100, :drecom_mixiapp_recipientIds => invite_users
       assert_response :success
