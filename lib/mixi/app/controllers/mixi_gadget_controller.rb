@@ -85,6 +85,7 @@ module MixiGadgetControllerModule
     # application overwrite
   end
   
+<<<<<<< HEAD:lib/mixi/app/controllers/mixi_gadget_controller.rb
 private 
   
   def token_require
@@ -96,6 +97,11 @@ private
       @mixi_token.save
       true
     end
+=======
+  # モバイル版で最初にアクセスされるページ。アプリ開発者がoverwriteして利用する
+  def register_mobile
+    # application overwrite
+>>>>>>> 77aa914... iframeの方に定義されているのでいらない:lib/mixi/app/controllers/mixi_gadget_controller.rb
   end
   
 end
