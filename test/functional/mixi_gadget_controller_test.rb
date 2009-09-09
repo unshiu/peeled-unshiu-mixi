@@ -21,31 +21,6 @@ module MixiGadgetControllerTestModule
     assert_template 'index'
   end
   
-  define_method('test: iframe は外部から直接開かれるのをさけるためにtokenを渡さないと閲覧できない') do 
-    post :iframe
-    assert_response :redirect
-    assert_redirect_with_error_code "U-10000"
-  end
-  
-  define_method('test: iframe は発行されたtokenを渡せば閲覧できる') do 
-    mixi_token = mixi_tokens(:secret_token)
-    
-    post :iframe, :mixi_token => mixi_token.token
-    assert_response :success
-    assert_template "iframe"
-    
-    mixi_token = MixiToken.find(mixi_token.id)
-    assert_equal(mixi_token.use_flag, true) # 使用済み
-  end
-  
-  define_method('test: iframe は既に利用されたtokenは再利用できない') do 
-    mixi_token = mixi_tokens(:use_token)
-    
-    post :iframe, :mixi_token => mixi_token.token
-    assert_response :redirect
-    assert_redirect_with_error_code "U-10000"
-  end
-  
   define_method('test: コンテナから取得したユーザ情報と友達情報を登録する-初期登録の場合') do 
     session[:valid] = true
     
