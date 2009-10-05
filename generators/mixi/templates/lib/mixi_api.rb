@@ -17,10 +17,12 @@ class MixiAPI
       owner.save
     end
     
-    friends_data = parse_json(friends_json)
-    friends_data.values.each do |friend_data|
-      user = MixiUser.create_or_update(friend_data)
-      viewer.mixi_friends << user unless viewer.mixi_friends.member?(user)
+    unless friends_json.nil?
+      friends_data = parse_json(friends_json)
+      friends_data.values.each do |friend_data|
+        user = MixiUser.create_or_update(friend_data)
+        viewer.mixi_friends << user unless viewer.mixi_friends.member?(user)
+      end
     end
   end
   
@@ -47,8 +49,8 @@ class MixiAPI
       end
     end
     
-    def people(guid = '@me', selector = '@friends')
-      p = OpenSocial::FetchPeopleRequest.new(@connection, guid, selector).send
+    def people(guid = '@me', selector = '@friends', params = nil)
+      p = OpenSocial::FetchPeopleRequest.new(@connection, guid, selector).send(params)
       parse_json(p.to_json)
     end
     

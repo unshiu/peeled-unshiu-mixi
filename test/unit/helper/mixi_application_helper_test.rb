@@ -84,4 +84,46 @@ module MixiApplicationHelperTestModule
     tag = script_function(:url => '/update', :method => "get", :with => "test=testest")
     assert_equal(tag, "$.drecom_mixi_gadget.requestScript('/update', 'test=testest', gadgets.io.MethodType.GET);")
   end
+  
+  define_method('test: mobile_gadget_url_for は mixiアプリモバイル用のURLを返す') do
+    @controller = ActionController::Integration::Session.new
+    ActionController::Request.any_instance.stubs(:mobile).returns(nil)
+    
+    tag = mobile_gadget_url_for(:controller => 'controller', :action => 'action')
+    assert_equal(tag, '?url=http%3A%2F%2Flocalhost%3A3000%2Fcontroller%2Faction')
+  end
+
+  define_method('test: mobile_gadget_url_for は ドコモ携帯でアクセスしたときのmixiアプリモバイル用のURLを返す') do
+    @controller = ActionController::Integration::Session.new
+    ActionController::Request.any_instance.stubs(:mobile).returns(Jpmobile::Mobile::Docomo.new(request))
+    
+    tag = mobile_gadget_url_for(:controller => 'controller', :action => 'action')
+    assert_equal(tag, '?guid=ON&url=http%3A%2F%2Flocalhost%3A3000%2Fcontroller%2Faction')
+  end
+
+  define_method('test: mobile_gadget_link_to は mixiアプリモバイル用のリンクタグを出力する') do
+    @controller = ActionController::Integration::Session.new
+    ActionController::Request.any_instance.stubs(:mobile).returns(nil)
+    
+    tag = mobile_gadget_link_to('link', :controller => 'controller', :action => 'action')
+    assert_equal(tag, '<a href="?url=http%3A%2F%2Flocalhost%3A3000%2Fcontroller%2Faction">link</a>')
+  end
+
+  define_method('test: mobile_gadget_form_for は mixiアプリモバイル用のformタグを出力する') do
+    @controller = ActionController::Integration::Session.new
+    ActionController::Request.any_instance.stubs(:mobile).returns(nil)
+    
+    tag = mobile_gadget_form_for(:form, :url => { :controller => 'controller', :action => 'action' }) {}
+    assert_equal(tag, '<form action="?url=http%3A%2F%2Flocalhost%3A3000%2Fcontroller%2Faction" method="post"></form>')
+  end
+
+  # 以下のメソッドがないと mobile_gadget_* が失敗する
+  def request
+    ActionController::Request.new(nil)
+  end
+
+  def protect_against_forgery?
+    false
+  end
+  
 end

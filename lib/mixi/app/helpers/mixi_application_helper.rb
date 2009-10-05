@@ -189,9 +189,8 @@ module MixiApplicationHelperModule
   # * <tt>:escape</tt> - 指定は無視されて必ずfalseになる
   def mobile_gadget_url_for(options)
     options[:escape] = false
-    url = "http://#{AppResources[:mixi][:mixi_mobile_domain]}/#{AppResources[:mixi][:app_id]}/?url="
+    url = request.mobile.instance_of?(Jpmobile::Mobile::Docomo) ? "?guid=ON&url=" : "?url="
     url << CGI.escape("http://" + AppResources[:init][:application_domain] + url_for(options))
-    url << "&guid=ON" if request.mobile.instance_of?(Jpmobile::Mobile::Docomo)
     url
   end
   

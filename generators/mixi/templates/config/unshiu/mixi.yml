@@ -22,6 +22,8 @@ common: &common
   
   endpoint: http://localhost:8080/social/rest
   
+  friends_api_count: 20  # 1回のAPI呼び出しで情報を取得するフレンドの数
+  
   oauth_public_key: |
     -----BEGIN CERTIFICATE-----
     MIICDDCCAXWgAwIBAgIJAJ4W4bqTjEGSMA0GCSqGSIb3DQEBBQUAMA8xDTALBgNV

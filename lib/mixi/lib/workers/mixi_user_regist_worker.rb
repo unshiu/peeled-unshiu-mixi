@@ -38,4 +38,30 @@ module MixiUserRegistWorkerModule
     end
   end
   
+  def mixi_friends_register(args)
+    viewer = MixiUser.first(:conditions => { :mixi_id => args[:viewer_id] })
+    rest_handler = args[:rest_handler]
+    offset = 0
+    limit = AppResources[:mixi][:friends_api_count]
+    loop do
+      params = { 'startIndex' => offset, 'count' => limit }
+      results = rest_handler.people('@me', '@friends', params)
+      register(viewer, results)
+      break if results.size != limit
+      offset += limit
+    end
+  end
+  
+  private
+  def register(viewer, results)
+    results.each do |k, v|
+      data = {
+        'mixi_id' => v['id'].split(':').last,
+        'nickname' => v['nickname'],
+        'thumbnail_url' => v['thumbnail_url']
+      }
+      user = MixiUser.create_or_update(data)
+      viewer.mixi_friends << user unless viewer.mixi_friends.member?(user)
+    end
+  end
 end
