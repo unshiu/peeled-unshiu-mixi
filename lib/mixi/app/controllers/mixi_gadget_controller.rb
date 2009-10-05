@@ -53,8 +53,8 @@ module MixiGadgetControllerModule
     session[:base_user] = viewer.base_user # point処理のため
     
     MixiUser.delaying_setup(owner, friends)
-    
-    redirect_mixi_gadget_to :controller => "mixi_gadget", :action => "top"
+  
+    render :text => "register complete."
   end
   
   def invite_register

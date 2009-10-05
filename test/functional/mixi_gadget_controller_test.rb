@@ -34,8 +34,7 @@ module MixiGadgetControllerTestModule
                                   "thumbnail_url" => "http://unshiu.drecom.jp/profile/501/profile.gif" } ].to_json
     
     post :register, :drecom_mixiapp_owner => owner, :drecom_mixiapp_viewer => owner, :drecom_mixiapp_friends => friends
-    assert_response :redirect
-    assert_redirected_to :action => 'top'
+    assert_response 200
     
     mixi_user = MixiUser.find_by_mixi_id(500)
     assert_equal(mixi_user.nickname, "jane")
@@ -66,8 +65,7 @@ module MixiGadgetControllerTestModule
                                     "thumbnail_url" => "http://unshiu.drecom.jp/profile/999/profile.gif" } ].to_json
     
     post :register, :drecom_mixiapp_owner => owner, :drecom_mixiapp_viewer => owner, :drecom_mixiapp_friends => friends
-    assert_response :redirect
-    assert_redirected_to :action => 'top'
+    assert_response 200
     
     mixi_user = MixiUser.find_by_mixi_id(1)
     assert_equal(mixi_user.nickname, "jane")
@@ -104,8 +102,7 @@ module MixiGadgetControllerTestModule
                                     "thumbnail_url" => "" } ].to_json
     
     post :register, :drecom_mixiapp_owner => owner, :drecom_mixiapp_viewer => owner, :drecom_mixiapp_friends => friends
-    assert_response :redirect
-    assert_redirected_to :action => 'top'
+    assert_response 200
     
     mixi_user = MixiUser.find_by_mixi_id(1)
     assert_equal(mixi_user.nickname, "jane")

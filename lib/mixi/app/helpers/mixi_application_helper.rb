@@ -17,7 +17,7 @@ module MixiApplicationHelperModule
   # * <tt>:url</tt> - 必須。遷移先URL
   # * <tt>:history</tt> - 履歴を残すかどうか。デフォルトtrue
   def link_to_update(name, options = {}, html_options = nil)
-    options[:history] ||= "true"
+    options[:history] = "true" if options[:history].nil?
     link_to_function(name, update_function(options), html_options || options.delete(:html))
   end
 
@@ -85,7 +85,7 @@ module MixiApplicationHelperModule
   # * <tt>:url</tt> - 必須。遷移先URL
   # * <tt>:history</tt> - 履歴を残すかどうか。デフォルトtrue
   def button_to_update(name, options = {}, html_options = nil)
-    options[:history] ||= "true"
+    options[:history] = "true" if options[:history].nil?
     button_to_function(name, update_function(options), html_options)
   end
 
@@ -197,6 +197,9 @@ module MixiApplicationHelperModule
 private
 
   def request_function(options, function_name)
+    if ActiveRecord::ConnectionAdapters::Column.value_to_boolean(options[:history])
+      return "#{JQUERY_VAR}.historyLoad('#{escape_javascript(options[:url])}');"
+    end
     function = "#{function_name}("
 
     url_options = options[:url]
@@ -227,10 +230,6 @@ private
     end
 
     function << ");"
-    
-    if ActiveRecord::ConnectionAdapters::Column.value_to_boolean(options[:history])
-      function << "#{JQUERY_VAR}.historyLoad('#{escape_javascript(options[:url])}');"
-    end
     
     return function
   end

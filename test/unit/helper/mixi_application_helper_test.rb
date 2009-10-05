@@ -2,7 +2,7 @@ module MixiApplicationHelperTestModule
   
   define_method('test: link_to_update は画面更新用の link tag を出力する') do 
     tag = link_to_update("test", :url => "/next_page")
-    assert_equal(tag, "<a href=\"#\" onclick=\"$.drecom_mixi_gadget.requestContainer('/next_page');$.historyLoad('/next_page');; return false;\">test</a>")
+    assert_equal("<a href=\"#\" onclick=\"$.historyLoad('/next_page');; return false;\">test</a>", tag)
   end
   
   define_method('test: link_to_update はオプション指定で遷移履歴を残さないようなJSを出力する') do 
@@ -42,7 +42,7 @@ module MixiApplicationHelperTestModule
   
   define_method('test: button_to_update は画面更新用の button tag を出力する') do 
     tag = button_to_update("test", :url => "/next_page")
-    assert_equal(tag, "<input onclick=\"$.drecom_mixi_gadget.requestContainer('/next_page');$.historyLoad('/next_page');;\" type=\"button\" value=\"test\" />")
+    assert_equal("<input onclick=\"$.historyLoad('/next_page');;\" type=\"button\" value=\"test\" />", tag)
   end
   
   define_method('test: button_to_update はオプション指定で遷移履歴を残さないような button tag を出力する') do 

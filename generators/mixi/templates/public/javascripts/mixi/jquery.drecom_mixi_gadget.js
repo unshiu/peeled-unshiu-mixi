@@ -80,15 +80,21 @@
 							return false;
 						}
 					}
+          klass.infollow_iframe();
 
           // Deferred
           klass.requestContainer('/mixi_gadget/register', params, gadgets.io.MethodType.POST, true)
-          .next(function(){
-            klass.infollow_iframe();
-            klass.historyInit();
+          .next(function(data){
+            if (data && data.rc == 200) {
+              klass.historyInit();
+            } else {
+              errorMessage = "ERROR : 01 : register failed."
+              if (data) { errorMessage += "(" + data.rc + ")"; }
+              throw errorMessage;
+            }
           })
           .error(function(e){
-            console.log(e);
+            updateContainerError(e);
           });
 		    }
 		  });
@@ -306,8 +312,12 @@
 		/**
 		 * ガジェットの表示をエラーとして更新する
 		 */
-		function updateContainerError() {
-		  updateContainer('エラーが発生しました。<br><a href="#" onclick="location.reload();">TOPに戻る</a><br>');
+		function updateContainerError(errorMessage) {
+      ERR_MESSAGE = '<div style="color:#ff0000;">※ mixiとの通信にエラーが発生した可能性があります。</div>'
+      if (typeof(errorMessage) != "undefined") {
+        ERR_MESSAGE += errorMessage;
+      }
+		  updateContainer(ERR_MESSAGE + '<br><a href="#" onclick="location.reload();">TOPに戻る</a><br>');
 		}
 
 		/**

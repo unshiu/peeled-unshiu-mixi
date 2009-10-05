@@ -137,7 +137,7 @@ jQuery.extend({
 		
 		jQuery.historyCurrentHash = newhash;
 		
-		if ((jQuery.browser.msie) && (jQuery.browser.version < 8)) {
+		if (jQuery.browser.msie) {
 			var ihistory = jQuery("#jQuery_history")[0];
 			var iframe = ihistory.contentWindow.document;
 			iframe.open();
@@ -146,6 +146,7 @@ jQuery.extend({
 			if(jQuery.browser.version <= 6) {
 				iframe.location.hash = encodeURIComponent(hash);
 			}
+			jQuery.historyCallback(hash);
 		}
 		else if (jQuery.browser.safari) {
 			jQuery.dontCheck = true;
