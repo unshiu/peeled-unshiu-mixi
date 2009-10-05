@@ -9,17 +9,16 @@ module MixiGadgetControllerModule
   class << self
     def included(base)
       base.class_eval do
-        protect_from_forgery :except => ["register", "invite_register", "index", "top", "timeout"]
+        protect_from_forgery :except => ["register_person", "register_friends", "register_friendships", "invite_register", "index", "top", "timeout"]
         layout 'mixi_gadget'
         before_filter :validate_session, :only => [:top]
       end
     end
   end
   
-  def register
+  def register_person
     owner_data = JSON.parse(params['drecom_mixiapp_owner']).with_indifferent_access
     viewer_data = JSON.parse(params['drecom_mixiapp_viewer']).with_indifferent_access
-    friends_data = JSON.parse(params['drecom_mixiapp_friends'])
 
     owner = MixiUser.create_or_update(owner_data)
     if owner.joined_at.nil?
@@ -33,30 +32,44 @@ module MixiGadgetControllerModule
       viewer = MixiUser.create_or_update(viewer_data)
     end
 
-    friends = []
-    friends_data.each do |friend_data|
-      user = MixiUser.create_or_update(friend_data)
-      unless user.nil?
-        friends << user
-        owner.mixi_friends << user unless owner.mixi_friends.member?(user)
-      end
-    end
-    owner.save
-    
     MixiLatestLogin.update_latest_login(viewer.id)
-    
-    owner = MixiUser.find(owner.id) # 関連情報がsessionにはいらないように
-    viewer = MixiUser.find(viewer.id)
+
     session[:opensocial_owner] = owner
     session[:opensocial_viewer] = viewer
     session[:valid] = nil
     session[:base_user] = viewer.base_user # point処理のため
-    
-    MixiUser.delaying_setup(owner, friends)
-  
-    render :text => "register complete."
+
   end
-  
+
+  def register_friends
+    viewer_data = JSON.parse(params['drecom_mixiapp_viewer']).with_indifferent_access
+    friends_data = JSON.parse(params['drecom_mixiapp_friends'])
+
+    viewer = MixiUser.create_or_update(viewer_data)
+
+    exist_mixi_users = MixiUser.find(:all, :conditions => ["mixi_id in (?)", _get_mixi_ids_by_json(friends_data)], :select => "id, mixi_id")
+    to_create_mixi_ids = _get_mixi_ids_by_json(friends_data) - _get_mixi_ids_by_mixi_user(exist_mixi_users);
+    friends_data.each do |friend_data|
+      if to_create_mixi_ids.include?(friend_data["mixi_id"])
+        user = MixiUser.create_or_update(friend_data)
+        viewer.mixi_friends << user unless (user.nil? || viewer.mixi_friends.include?(user))
+      end
+    end
+    viewer.save
+  end
+
+  # マイミク削除に対応するため，viewer_friends の mixi_id をすべて受け取って更新
+  def register_friendships
+    viewer_data = JSON.parse(params['drecom_mixiapp_viewer']).with_indifferent_access
+    viewer_friend_mixi_ids = JSON.parse(params['drecom_mixiapp_friend_ids'])
+
+    viewer = MixiUser.create_or_update(viewer_data)
+    all_mixi_friends = MixiUser.find(:all, :conditions => ["mixi_id in (?)", viewer_friend_mixi_ids], :select => "id, mixi_id")
+
+    viewer.mixi_friends = all_mixi_friends
+    viewer.save
+  end
+
   def invite_register
     mixi_user_id = params[:drecom_mixiapp_inviteId]
     invite_data = JSON.parse(params['drecom_mixiapp_recipientIds'])
@@ -99,4 +112,19 @@ module MixiGadgetControllerModule
     # application overwrite
   end
   
+  private
+  def _get_mixi_ids_by_json(friends_data)
+    mixi_ids = []
+    friends_data.each do |data|
+      mixi_ids << data["mixi_id"]
+    end
+    return mixi_ids
+  end
+  def _get_mixi_ids_by_mixi_user(mixi_users)
+    mixi_ids = []
+    mixi_users.each do |mixi_user|
+      mixi_ids << mixi_user.mixi_id
+    end
+    return mixi_ids
+  end
 end

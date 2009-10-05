@@ -159,6 +159,7 @@
 		var opt = {};
 		if (settings.max !== undefined) opt[fields.MAX] = settings.max;
 		if (settings.first !== undefined) opt[fields.FIRST] = settings.first;
+    if (settings.has_app) opt[fields.FILTER] = os.DataRequest.FilterType.HAS_APP;
 		var req = os.newDataRequest();
 		req.add(req.newFetchPeopleRequest(idspec, opt), 'FRIENDS');
 		req.send(function (res) {
@@ -189,22 +190,24 @@
 			};
 			if ($.isFunction(callback)) callback(friends);
 		});
-		return friends;
+		return;
 	};
-	klass.getOwnerFriends = function (callback, max, first) {
+	klass.getOwnerFriends = function (callback, max, first, has_app) {
 		return klass.getFriends({
 			'callback' : callback,
 			'userId' : 'OWNER',
 			'max' : max,
-			'first' : first
+			'first' : first,
+      'has_app' : has_app
 		});
 	};
-	klass.getViewerFriends = function (callback) {
+	klass.getViewerFriends = function (callback, max, first, has_app) {
 		return klass.getFriends({
 			'callback' : callback,
 			'userId' : 'VIEWER',
 			'max' : max,
-			'first' : first
+			'first' : first,
+      'has_app' : has_app
 		});
 	};
 	new function () {

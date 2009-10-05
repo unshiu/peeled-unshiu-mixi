@@ -20,6 +20,9 @@
 				app_name: "",
 				iframe_width: "400px",
 				iframe_height: "500px",
+        show_load_seq: true,
+        has_app_filter: true,
+        debug_flag: false,
 				view_name: gadgets.views.getCurrentView().getName()
 			},config);
 		
@@ -52,26 +55,21 @@
 		 * 自分と友達の情報をアプリケーションサーバへ登録するリクエストを投げる
 		 */
 		function canvasInit() {
+      var drecom_mixiapp_friend_ids = [];
 		  var req = opensocial.newDataRequest();
 
 		  var idspec_owner = opensocial.IdSpec.PersonId.OWNER;
 			var idspec_viewer = opensocial.IdSpec.PersonId.VIEWER;
-		  var idspec_friends = opensocial.newIdSpec({'userId':opensocial.IdSpec.PersonId.OWNER, 'groupId':opensocial.IdSpec.GroupId.FRIENDS});
 
-		  var friend_params = {};
-		  friend_params[opensocial.DataRequest.PeopleRequestFields.MAX] = 1000;
-			
 		  req.add(req.newFetchPersonRequest(idspec_owner), "owner");
 			req.add(req.newFetchPersonRequest(idspec_viewer), "viewer");
-		  req.add(req.newFetchPeopleRequest(idspec_friends, friend_params), "friends");
 		  req.send(function (res) {
 			  if (res.hadError()) {
 		      updateContainerError();
 		    } else {
 		      var params = {
 		        "drecom_mixiapp_owner" : person_to_json(res.get("owner").getData()),
-		        "drecom_mixiapp_viewer" : person_to_json(res.get("viewer").getData()),
-		        "drecom_mixiapp_friends" : people_to_json(res.get("friends").getData())
+		        "drecom_mixiapp_viewer" : person_to_json(res.get("viewer").getData())
 		      };
 		
 					if(config.owner_only) {
@@ -83,15 +81,56 @@
           klass.infollow_iframe();
 
           // Deferred
-          klass.requestContainer('/mixi_gadget/register', params, gadgets.io.MethodType.POST, true)
+          klass.requestContainer('/mixi_gadget/register_person', params, gadgets.io.MethodType.POST, true)
           .next(function(data){
-            if (data && data.rc == 200) {
-              klass.historyInit();
-            } else {
-              errorMessage = "ERROR : 01 : register failed."
-              if (data) { errorMessage += "(" + data.rc + ")"; }
-              throw errorMessage;
+            // register 時には klass.setSession() が入っているので eval
+            var ScriptFragment = '<script[^>]*>([\\S\\s]*?)<\/script>';
+            var scripts = data.text.match(new RegExp(ScriptFragment, 'img'));
+            if (scripts) {
+              for (var i=0; i<scripts.length; i++) {
+                var script = scripts[i].match(new RegExp(ScriptFragment, 'im'));
+                if (script) runScript(script[1]);
+              }
             }
+          })
+          .next(function(){
+            return klass.getViewerFriends();
+          })
+          .next(function(data){
+            if (config.show_load_seq) {
+              $("#gadget_container_seq").fadeIn("slow");
+            }
+            loopSize = Math.ceil(data.getTotalSize() / 20);
+            return loop(loopSize, function(index){
+              return klass.getViewerFriends(index * 20)
+              .next(function(data){
+                data.each(function(e){
+                  drecom_mixiapp_friend_ids.push(e.getId());
+                });
+                var params = {
+                  "drecom_mixiapp_viewer" : person_to_json(res.get("viewer").getData()),
+                  "drecom_mixiapp_friends" : people_to_json(data)
+                };
+                return klass.requestContainer('/mixi_gadget/register_friends', params, gadgets.io.MethodType.POST, true);
+              })
+              .next(function(){
+                $("#gadget_container_seq").html('<div style="text-align:center;"><span id="load_sequence" style="font-size:40px;color:#aaaaaa;">' + parseInt((index + 1) / loopSize * 100) + '</span>％</div>');
+              });
+            });
+          })
+          .next(function(){
+            var params = {
+              "drecom_mixiapp_viewer" : person_to_json(res.get("viewer").getData()),
+              "drecom_mixiapp_friend_ids" : gadgets.json.stringify(drecom_mixiapp_friend_ids)
+            };
+            return klass.requestContainer('/mixi_gadget/register_friendships', params, gadgets.io.MethodType.POST, true)
+          })
+          .next(function(){
+            if (config.show_load_seq) {
+              $("#gadget_container_seq").fadeOut("slow");
+              $("#gadget_container_seq").html("");
+            }
+            klass.historyInit();
           })
           .error(function(e){
             updateContainerError(e);
@@ -127,14 +166,6 @@
 		 */
 		function previewInit() {
 		  requestContainer('/mixi_gadget/preview');
-		}
-		
-		klass.requestNavigateTo = function (view, pagename) {
-			var canvas_view = new gadgets.views.View(view);
-			$.opensocial_simple.postViewerData({'drecom_mixiapp_history' : pagename}, function () { 
-				//console.log(arguments) 
-			});
-			gadgets.views.requestNavigateTo(canvas_view, {'pagename' : pagename });
 		}
 		
 		/**
@@ -181,7 +212,18 @@
       if (useDeferred) {
         var deferred = new Deferred();
         requestServer(urlPath, urlParams, function(data){
-          deferred.call(data);
+          // mixi 本番環境だと data.rc が取れないので data.text.length で仕方なく length でチェック。エラー時が取れない＞＜
+          if (data && data.text && data.text.length > 0)
+            deferred.call(data);
+          } else {
+            errorMessage = "ERROR : klass.requestContainer : " + urlPath + " faild."
+            if (data) { errorMessage += "(" + data.rc + ")"; }
+            if (config.debug_flag) {
+              deferred.fail(data.text);
+            } else {
+              deferred.fail(errorMessage);
+            }
+          }
         }, method);
         return deferred;
       } else {
@@ -226,6 +268,7 @@
 		  var params = {};
 		  params[gadgets.io.RequestParameters.METHOD] = method;
 		  params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
+		  params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 0
 
 		  var url = "";
 		  if (method == gadgets.io.MethodType.POST) {
@@ -467,6 +510,16 @@
 
     klass.historyInit = function() {
       alert('klass.historyInit is not implemented.');
+    };
+    klass.getViewerFriends = function(offset) {
+      if (offset == undefined) {
+        offset = 0;
+      }
+      var deferred = new Deferred();
+      $.opensocial_simple.getViewerFriends(function(data){
+        deferred.call(data);
+      }, 20, offset, config.has_app_filter);
+      return deferred;
     };
 		
 		$[name_space] = klass;
