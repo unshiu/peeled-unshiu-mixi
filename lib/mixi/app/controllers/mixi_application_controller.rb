@@ -8,12 +8,12 @@ private
   
   # 現在そのアプリを閲覧しているユーザを返す
   def current_mixiapp_viewer
-    session[:opensocial_viewer] ? session[:opensocial_viewer] : MixiUser.find_by_mixi_id(params[:opensocial_viewer_id])
+    session[:opensocial_viewer] ? session[:opensocial_viewer].dup : MixiUser.find_by_mixi_id(params[:opensocial_viewer_id])
   end
   
   # 現在そのアプリのガジェットを所有しているユーザを返す
   def current_mixiapp_owner
-    session[:opensocial_owner] ? session[:opensocial_owner] : MixiUser.find_by_mixi_id(params[:opensocial_owner_id])
+    session[:opensocial_owner] ? session[:opensocial_owner].dup : MixiUser.find_by_mixi_id(params[:opensocial_owner_id])
   end
   
   def validate_session

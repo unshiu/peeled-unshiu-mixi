@@ -46,22 +46,23 @@ module MixiUserRegistWorkerModule
     loop do
       params = { 'startIndex' => offset, 'count' => limit }
       results = rest_handler.people('@me', '@friends', params)
-      register(viewer, results)
+      friends = results.values.map do |r|
+        {
+          'mixi_id' => r['id'].split(':').last,
+          'nickname' => r['display_name'],
+          'thumbnail_url' => r['thumbnail_url']
+        }
+      end
+      register_friends(viewer, friends)
       break if results.size != limit
       offset += limit
     end
   end
   
-  private
-  def register(viewer, results)
-    results.each do |k, v|
-      data = {
-        'mixi_id' => v['id'].split(':').last,
-        'nickname' => v['nickname'],
-        'thumbnail_url' => v['thumbnail_url']
-      }
-      user = MixiUser.create_or_update(data)
-      viewer.mixi_friends << user unless viewer.mixi_friends.member?(user)
+  def register_friends(user, friends)
+    friends.each do |friend|
+      friend_user = MixiUser.create_or_update(friend)
+      user.mixi_friends << friend_user unless user.mixi_friends.member?(friend_user)
     end
   end
 end

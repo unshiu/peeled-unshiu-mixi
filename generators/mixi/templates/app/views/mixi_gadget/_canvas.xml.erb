@@ -2,6 +2,7 @@
 
 	<%= javascript_include_tag :defaults %>
 	<%= javascript_include_tag "mixi/jquery.opensocial_simple" %>
+  <%= javascript_include_tag "mixi/jsdeferred.mini.js" %>
 	<%= javascript_include_tag "mixi/jquery.drecom_mixi_gadget" %>
 	<%= javascript_include_tag "mixi/jquery.history.js" %>
 	<%= javascript_include_tag "mixi/jquery.cookie.js" %>
@@ -62,11 +63,20 @@
 				$("#gadget_history").empty();
 			}
 		}
-	
-		$.opensocial_simple.getPerson(function (result) {
-			$.historyInit(pageload, "/mixi_gadget/top?viewer=" + result.VIEWER.getId());
-		});
-		
+
+    $.drecom_mixi_gadget.historyInit = function() {
+      $.opensocial_simple.getViewerData(function (data) { 
+        if(data["drecom_mixiapp_history"] != null) {
+          url = data["drecom_mixiapp_history"];
+        } else {
+          url = "/mixi_gadget/top";
+        }
+        $.opensocial_simple.getPerson(function (result) {
+          $.historyInit(pageload, url + "?viewer=" + result.VIEWER.getId());
+        });
+      });
+    };
+
 	});
 	
 	</script>

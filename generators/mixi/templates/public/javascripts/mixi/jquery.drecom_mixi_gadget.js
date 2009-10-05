@@ -5,7 +5,8 @@
  * Copyright (c) 2009 Drecom
  *
  */
-;(function($) {  
+;(function($) {
+  Deferred.define();
 
 	var name_space = 'drecom_mixi_gadget';
 	$.fn[name_space] = function(config){
@@ -79,15 +80,16 @@
 							return false;
 						}
 					}
-					
-					$.opensocial_simple.getViewerData(function (data) { 
-						if(data["drecom_mixiapp_history"] != null) {
-							params['history'] = data["drecom_mixiapp_history"];
-						}
-		      	klass.requestContainer('/mixi_gadget/register', params, gadgets.io.MethodType.POST);
-					});
-					klass.gadget_iframe();
-					klass.infollow_iframe();
+
+          // Deferred
+          klass.requestContainer('/mixi_gadget/register', params, gadgets.io.MethodType.POST, true)
+          .next(function(){
+            klass.infollow_iframe();
+            klass.historyInit();
+          })
+          .error(function(e){
+            console.log(e);
+          });
 		    }
 		  });
 		}
@@ -106,8 +108,8 @@
 		      owner = res.get("owner").getData();
 		      viewer = res.get("viewer").getData();
 		      var params = {
-		        "owner" : owner.getField(opensocial.Person.Field.ID),
-		        "viewer" : viewer.getField(opensocial.Person.Field.ID)
+		        "opensocial_owner_id" : owner.getField(opensocial.Person.Field.ID),
+		        "opensocial_viewer_id" : viewer.getField(opensocial.Person.Field.ID)
 		      };
 		      requestContainer('/mixi_gadget/profile', params);
 		    }
@@ -148,32 +150,43 @@
 		/**
 		 * リクエスト内容をアプリケーションサーバへなげる
 		 */
-		klass.requestContainer = function (urlPath, urlParams, method) {
+		klass.requestContainer = function (urlPath, urlParams, method, useDeferred) {
+      if (typeof(useDeferred) == "undefined") {
+        useDeferred = false;
+      }
 			$.opensocial_simple.getPerson(function (result) {
 				if(urlParams == null) {
 					urlParams = new Array
 				} 
 				
 				if(typeof(urlParams) == "object" || urlParams instanceof Array) {
-					urlParams['owner'] = result.OWNER.getId();
+					urlParams['opensocial_viewer_id'] = result.VIEWER.getId();
 					if (config.session_id) urlParams[config.session_key] = config.session_id;
 				} else if(typeof(urlParams) == "string" || urlParams instanceof String) {
 					if (urlParams.length > 0) {
-						urlParams += encodeURI("&owner=" + result.OWNER.getId());
+						urlParams += encodeURI("&opensocial_viewer_id=" + result.VIEWER.getId());
 					} else {
-						urlParams += encodeURI("?owner=" + result.OWNER.getId());
+						urlParams += encodeURI("?opensocial_viewer_id=" + result.VIEWER.getId());
 					}
 					if (config.session_id) urlParams += encodeURI("&" + config.session_key + "=" + config.session_id);
 				}
 			});
-			
-			requestServer(urlPath, urlParams, function(obj) {
-		    if (obj && obj.text && obj.text.length>0) {
-			    updateContainer(obj.text);
-		    } else {
-		      updateContainerError();
-		    }
-		  }, method);
+
+      if (useDeferred) {
+        var deferred = new Deferred();
+        requestServer(urlPath, urlParams, function(data){
+          deferred.call(data);
+        }, method);
+        return deferred;
+      } else {
+        requestServer(urlPath, urlParams, function(obj) {
+          if (obj && obj.text && obj.text.length>0) {
+              updateContainer(obj.text);
+          } else {
+            updateContainerError();
+          }
+        }, method);
+      }
 		};
 		
 		/**
@@ -441,6 +454,10 @@
 				});
 			});
 		}
+
+    klass.historyInit = function() {
+      alert('klass.historyInit is not implemented.');
+    };
 		
 		$[name_space] = klass;
 		$[name_space.replace(/_([a-z])/g, function () { return arguments[1].toUpperCase() })] = klass;

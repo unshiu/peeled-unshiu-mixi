@@ -17,17 +17,22 @@ module MixiGadgetControllerModule
   end
   
   def register
-    owner_data = JSON.parse(params['drecom_mixiapp_owner'])
-    viewer_data = JSON.parse(params['drecom_mixiapp_viewer'])
+    owner_data = JSON.parse(params['drecom_mixiapp_owner']).with_indifferent_access
+    viewer_data = JSON.parse(params['drecom_mixiapp_viewer']).with_indifferent_access
     friends_data = JSON.parse(params['drecom_mixiapp_friends'])
-    
+
     owner = MixiUser.create_or_update(owner_data)
     if owner.joined_at.nil?
       owner.joined_at = Time.now
       owner.save
     end
-    viewer = MixiUser.create_or_update(viewer_data)
-    
+
+    if (owner.mixi_id == viewer_data["mixi_id"]) 
+      viewer = owner
+    else
+      viewer = MixiUser.create_or_update(viewer_data)
+    end
+
     friends = []
     friends_data.each do |friend_data|
       user = MixiUser.create_or_update(friend_data)
@@ -49,12 +54,7 @@ module MixiGadgetControllerModule
     
     MixiUser.delaying_setup(owner, friends)
     
-    if params[:history]
-      history = params[:history].split(/\//)
-      redirect_mixi_gadget_to :controller => history[0], :action => history[1]
-    else
-      redirect_mixi_gadget_to :controller => "mixi_gadget", :action => "top"
-    end
+    redirect_mixi_gadget_to :controller => "mixi_gadget", :action => "top"
   end
   
   def invite_register
@@ -71,6 +71,15 @@ module MixiGadgetControllerModule
     render :text => "NG"
   end
   
+  def register_mobile
+    owner_id = params[:opensocial_owner_id]
+    h = MixiAPI::RESTHandler.new(owner_id)
+    MixiAPI.register(nil, h.person, nil)
+    MiddleMan.worker(:mixi_user_regist_worker).async_mixi_friends_register(:arg => { :viewer_id => owner_id, :rest_handler => h })
+    
+    redirect_to :action => 'top_mobile', :opensocial_owner_id => owner_id
+  end
+  
   def timeout
   end
   
@@ -85,8 +94,8 @@ module MixiGadgetControllerModule
     # application overwrite
   end
   
-  # モバイル版で最初にアクセスされるページ。アプリ開発者がoverwriteして利用する
-  def register_mobile
+  # モバイル版で最初に閲覧するページ。アプリ開発者がoverwriteして利用する
+  def top_mobile
     # application overwrite
   end
   
