@@ -241,14 +241,10 @@
 		 * JSによるリクエスト内容をアプリケーションサーバへなげる
 		 */
 		klass.requestScript = function (urlPath, urlParams, method) {
-		  $('#gadget_container').startWaiting();
 		  requestServer(urlPath, urlParams, function(obj) {
-		    $('#gadget_container').stopWaiting();
 		    if (obj && obj.text && obj.text.length>0) {
 		      runScript(obj.text);
-		    } else {
-		      runScriptError();
-		    }
+		    } 
 		  }, method);
 		}
 
@@ -370,15 +366,15 @@
 		  try {
 		    eval(script);
 		  } catch (e) {
-		    runScriptError();
+		    runScriptError(e);
 		  }
 		}
 
 		/**
 		 * スクリプトの実行に問題が起こった際の処理。
 		 */
-		function runScriptError() {
-		  alert('エラーが発生しました。');
+		function runScriptError(e) {
+		  alert('javascriptに問題があります。:' + e);
 		}
 
 		/**
