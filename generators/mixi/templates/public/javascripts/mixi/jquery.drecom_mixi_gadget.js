@@ -213,7 +213,7 @@
         var deferred = new Deferred();
         requestServer(urlPath, urlParams, function(data){
           // mixi 本番環境だと data.rc が取れないので data.text.length で仕方なく length でチェック。エラー時が取れない＞＜
-          if (data && data.text && data.text.length > 0)
+          if (data && data.text && data.text.length > 0) {
             deferred.call(data);
           } else {
             errorMessage = "ERROR : klass.requestContainer : " + urlPath + " faild."
