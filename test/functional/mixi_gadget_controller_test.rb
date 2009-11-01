@@ -1,3 +1,11 @@
+class MixiGadgetController
+  include MixiGadgetControllerModule
+  
+  def signature_require
+    return true
+  end
+end
+
 module MixiGadgetControllerTestModule
 
   class << self

@@ -11,6 +11,8 @@ module MixiGadgetControllerModule
       base.class_eval do
         protect_from_forgery :except => ["register_person", "register_friends", "register_friendships", "invite_register", "index", "top", "timeout"]
         layout 'mixi_gadget'
+        
+        before_filter :signature_require, :except => [:index]
         before_filter :validate_session, :only => [:top]
       end
     end
