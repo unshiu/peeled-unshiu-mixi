@@ -117,6 +117,17 @@ module MixiApplicationHelperTestModule
     assert_equal(tag, '<form action="?url=http%3A%2F%2Flocalhost%3A3000%2Fcontroller%2Faction" method="post"></form>')
   end
 
+  define_method('test: post_activity は アクティビティ出力タグを出力する') do
+    tag = post_activity({:title => "post title", :body => "post body"});
+    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'HIGH', 'media_item' : ''}, function() {  });")
+
+    tag = post_activity({:title => "post title", :body => "post body", :priority => "LOW"});
+    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'LOW', 'media_item' : ''}, function() {  });")
+    
+    tag = post_activity({:title => "post title", :body => "post body", :media_item => ["media.gif"]});
+    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'HIGH', 'media_item' : 'media.gif'}, function() {  });")
+  end
+  
   # 以下のメソッドがないと mobile_gadget_* が失敗する
   def request
     ActionController::Request.new(nil)

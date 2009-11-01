@@ -133,9 +133,21 @@ module MixiApplicationHelperModule
   # * <tt>:title</tt> - 必須。タイトル
   # * <tt>:body</tt> - 必須。本文
   # * <tt>:priority</tt> - 優先度。デフォルトではHIGH
+  # * <tt>:media_item</tt> - 画像、配列で複数指定可能
+  # * <tt>:callback</tt> - post時のcallback関数
+  # 
+  # example)
+  #  simple
+  #     post_activity({:title => 'hoge', :body => 'foo'})
+  #  with_callback
+  #     post_activity({:title => 'hoge', :body => 'foo', :callback => "alert('hoge');"}) 
+  #  with_media_item
+  #     post_activity({:title => 'hoge', :body => 'foo', :media_item => ['http://redmine.unshiu.jp/themes/unshiu_theme/images/logo.png']})
+  #
   def post_activity(options)
     options[:priority] ||= "HIGH"
-    "#{JQUERY_VAR}.opensocial_simple.postActivity({'TITLE' : '#{options[:title]}', 'BODY' : '#{options[:body]}'}, '#{options[:priority]}' , function () { /* console.log(arguments) */ } /* optional */);"
+    options[:callback] ||= ""
+    "#{JQUERY_VAR}.opensocial_simple.postActivity('#{options[:title]}', {'TITLE' : '#{options[:title]}', 'BODY' : '#{options[:body]}', 'priority' : '#{options[:priority]}', 'media_item' : '#{options[:media_item]}'}, function() { #{options[:callback]} });"
   end
   
   # モバイルアプリ用のリンクタグを出力する

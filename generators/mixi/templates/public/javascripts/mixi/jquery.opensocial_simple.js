@@ -312,19 +312,57 @@
 			req.send(create_bridge(callback));
 			return this;
 		};
-		klass.postActivity = function (title, priority, callback) {
+		klass.postActivity = function (title, setting, callback) {
 			var activityPriority = os.CreateActivityPriority;
 			var params = {'TITLE' : title};
 			if ('string' !== typeof title) params = title;
-			if ($.isFunction(priority)) {
-				callback = priority;
-				priority = activityPriority.LOW;
-			}
-			priority = activityPriority[priority] || priority;
+			if ($.isFunction(setting)) {
+				callback = setting;
+				setting = { 'priority' : 'HIGH' };
+			};
+			if ('string' === typeof setting) setting = { 'priority' : setting };
+			if (!setting) setting = { 'priority' : 'HIGH' };
+			if ($.isArray(setting)) setting = { 'target' : setting, 'priority' : 'HIGH' };
+			setting.priority = activityPriority[setting] || setting.priority;
+			if (!setting.priority) setting.priority = 'HIGH';
 
 			var param = create_param(params, 'Activity');
+			if (!$.isArray(setting.target)) setting.target = setting.target ? [setting.target] : [];
+			(function () {
+				if ($.isArray(setting.target) && !setting.target.length) return;
+				if (!$.isArray(setting.target) && !setting.target) return;
+				param[mixi.ActivityField.RECIPIENTS] = ($.isArray(setting.target) ? setting.target : [setting.target]);
+			})();
+			(function () {
+				if (!setting.media_item) return;
+				var media_item = setting.media_item;
+				if (!$.isArray(media_item)) media_item = [media_item];
+				var item_list = [];
+				$.each(media_item, function () {
+					var src = this + '';
+					var type = src.match(/gif$/i)
+						? 'image/gif'
+						: src.match(/jpe?g$/i)
+							? 'image/jpeg'
+							: src.match(/png$/i)
+								? 'image/png'
+								: ''
+					;
+					if (!type) return;
+					item_list.push(os.newMediaItem(type, src));
+				});
+				if (!item_list.length) return;
+				param[os.Activity.Field.MEDIA_ITEMS] = item_list;
+			})();
+			(function () {
+				if (!setting.app_params) return;
+				var escaped = gadgets.io.encodeValues({
+					appParams: gadgets.json.stringify(setting.app_params)
+				});
+				param[os.Activity.Field.URL] = "http://mixi.jp/run_appli.pl?id=" + (gadgets.util.getUrlParameters()['app_id']) + "&" + escaped;
+			})();
 			var req = os.newActivity(param);
-			os.requestCreateActivity(req, priority, create_bridge(callback));
+			os.requestCreateActivity(req, setting.priority, create_bridge(callback));
 			return this;
 		};
 		klass.postMessage = function (target, title, body, callback) {
