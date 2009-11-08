@@ -1,0 +1,22 @@
+<%= javascript_include_tag :defaults %>
+<%= javascript_include_tag "mixi/jquery.opensocial_simple" %>
+<%= javascript_include_tag "mixi/jsdeferred.mini.js" %>
+<%= javascript_include_tag "mixi/jquery.drecom_mixi_gadget" %>
+<%= javascript_include_tag "mixi/jquery.history.js" %>
+<%= javascript_include_tag "mixi/jquery.cookie.js" %>
+
+<%= javascript_include_tag("mixi/#{view_name}.js") %>
+
+<script type="text/javascript">
+<!--
+	var base_url = '<%= "#{request.protocol}#{request.host}:#{request.port}" %>';
+	$('#gadget_container').drecom_mixi_gadget({base_url: base_url,
+										   	   owner_only: true,
+										       app_name: '<%= AppResources[:init][:service_name] %>',
+                                               view_name: '<%= view_name %>'});
+
+// -->
+</script>
+
+<div id="gadget_container_seq" style="display:none;"></div>
+<div id="gadget_container"></div>

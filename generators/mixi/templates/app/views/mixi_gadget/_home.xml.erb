@@ -1,11 +1,7 @@
 <![CDATA[
 
-	<%= javascript_include_tag("home.js") %>
-
-	<script type="text/javascript">
-	gadgets.util.registerOnLoadHandler(init);
-	</script>
-
+	<%= render :partial => 'gadget_init', :locals => {:view_name => "home"} %>
+	
 	<!-- The code for Preview view is here. -->
 	<div>Home view for MixiApp.</div>
 ]]>
