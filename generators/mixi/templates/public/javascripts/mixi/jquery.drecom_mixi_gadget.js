@@ -153,10 +153,10 @@
 		      owner = res.get("owner").getData();
 		      viewer = res.get("viewer").getData();
 		      var params = {
-		        "opensocial_owner_id" : owner.getField(opensocial.Person.Field.ID),
-		        "opensocial_viewer_id" : viewer.getField(opensocial.Person.Field.ID)
+		        "unshiu_opensocial_owner_id" : owner.getField(opensocial.Person.Field.ID),
+		        "unshiu_opensocial_viewer_id" : viewer.getField(opensocial.Person.Field.ID)
 		      };
-		      requestContainer('/mixi_gadget/profile', params);
+		      klass.requestContainer('/mixi_gadget/profile', params);
 		    }
 		  });
 		}
@@ -165,7 +165,7 @@
 		 * previewが表示された場合の処理
 		 */
 		function previewInit() {
-		  requestContainer('/mixi_gadget/preview');
+		  klass.requestContainer('/mixi_gadget/preview');
 		}
 		
 		/**
@@ -201,9 +201,9 @@
 					if (config.session_id) urlParams[config.session_key] = config.session_id;
 				} else if(typeof(urlParams) == "string" || urlParams instanceof String) {
 					if (urlParams.length > 0) {
-						urlParams += encodeURI("&opensocial_viewer_id=" + result.VIEWER.getId());
+						urlParams += encodeURI("&unshiu_opensocial_viewer_id=" + result.VIEWER.getId());
 					} else {
-						urlParams += encodeURI("?opensocial_viewer_id=" + result.VIEWER.getId());
+						urlParams += encodeURI("?unshiu_opensocial_viewer_id=" + result.VIEWER.getId());
 					}
 					if (config.session_id) urlParams += encodeURI("&" + config.session_key + "=" + config.session_id);
 				}
