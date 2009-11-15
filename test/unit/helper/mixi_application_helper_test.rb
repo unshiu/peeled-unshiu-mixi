@@ -85,6 +85,22 @@ module MixiApplicationHelperTestModule
     assert_equal(tag, "$.drecom_mixi_gadget.requestScript('/update', 'test=testest', gadgets.io.MethodType.GET);")
   end
   
+  define_method('test: post_activity は アクティビティ出力タグを出力する') do
+    tag = post_activity({:title => "post title", :body => "post body"});
+    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'HIGH', 'media_item' : ''}, function() {  });")
+
+    tag = post_activity({:title => "post title", :body => "post body", :priority => "LOW"});
+    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'LOW', 'media_item' : ''}, function() {  });")
+    
+    tag = post_activity({:title => "post title", :body => "post body", :media_item => ["media.gif"]});
+    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'HIGH', 'media_item' : 'media.gif'}, function() {  });")
+  end
+  
+  define_method('test: link_to_mixi_external は 外部サイトへ誘導する際にmixi側の確認画面をはさませるリンクを出力する') do 
+    tag = link_to_mixi_external("external site", "http://www.unshiu.jp/external")
+    assert_equal(tag, "<a href=\"javascript:void(0);\" onclick=\"mixi.util.requestExternalNavigateTo('http://www.unshiu.jp/external');\">external site</a>")
+  end
+
   define_method('test: mobile_gadget_url_for は mixiアプリモバイル用のURLを返す') do
     @controller = ActionController::Integration::Session.new
     ActionController::Request.any_instance.stubs(:mobile).returns(nil)
@@ -115,17 +131,6 @@ module MixiApplicationHelperTestModule
     
     tag = mobile_gadget_form_for(:form, :url => { :controller => 'controller', :action => 'action' }) {}
     assert_equal(tag, '<form action="?url=http%3A%2F%2Flocalhost%3A3000%2Fcontroller%2Faction" method="post"></form>')
-  end
-
-  define_method('test: post_activity は アクティビティ出力タグを出力する') do
-    tag = post_activity({:title => "post title", :body => "post body"});
-    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'HIGH', 'media_item' : ''}, function() {  });")
-
-    tag = post_activity({:title => "post title", :body => "post body", :priority => "LOW"});
-    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'LOW', 'media_item' : ''}, function() {  });")
-    
-    tag = post_activity({:title => "post title", :body => "post body", :media_item => ["media.gif"]});
-    assert_equal(tag, "$.opensocial_simple.postActivity('post title', {'TITLE' : 'post title', 'BODY' : 'post body', 'priority' : 'HIGH', 'media_item' : 'media.gif'}, function() {  });")
   end
   
   # 以下のメソッドがないと mobile_gadget_* が失敗する

@@ -150,6 +150,41 @@ module MixiApplicationHelperModule
     "#{JQUERY_VAR}.opensocial_simple.postActivity('#{options[:title]}', {'TITLE' : '#{options[:title]}', 'BODY' : '#{options[:body]}', 'priority' : '#{options[:priority]}', 'media_item' : '#{options[:media_item]}'}, function() { #{options[:callback]} });"
   end
   
+  # 外部サイトへ誘導する際にmixi側の確認画面を挟むlink_to。なお開発環境においてはmixi側の確認画面を挟まない。
+  # _param1_:: name
+  # _param2_:: options
+  # _param3_:: html_options
+  #
+  # パラメータ詳細はlink_toと同様。
+  #
+  # ==== Signatures
+  #
+  #   link_to_mixi_external(name, options = {}, html_options = nil)
+  #   link_to_mixi_external(options = {}, html_options = nil) do
+  #     # name
+  #   end
+  #
+  def link_to_mixi_external(*args, &block)
+    if block_given?
+      option_index = 0
+      html_option_index = 1
+      args << Hash.new if args.size == 1
+    else
+      option_index = 1
+      html_option_index = 2
+      args << Hash.new if args.size == 2
+    end
+    url = url_for(args[option_index])
+    if development?
+      args[html_option_index]['onclick'] = "window.open('#{url}');"
+    else
+      args[html_option_index]['onclick'] = "mixi.util.requestExternalNavigateTo('#{url}');"
+    end
+    args[option_index] = "javascript:void(0);"
+    
+    link_to(*args, &block)
+  end
+  
   # モバイルアプリ用のリンクタグを出力する
   # _param1_:: name
   # _param2_:: options
